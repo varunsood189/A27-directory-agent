@@ -1,0 +1,8 @@
+{
+  "id": "who_hocking_hills",
+  "predicate": "who",
+  "request": "Who do we know at Hocking Hills Mower Works?",
+  "book": "keystone",
+  "expect_name": "Matt Swaim",
+  "allow_empty": false
+}

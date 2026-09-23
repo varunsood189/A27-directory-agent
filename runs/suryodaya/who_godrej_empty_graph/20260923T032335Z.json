@@ -1,0 +1,141 @@
+{
+  "task_id": "who_godrej_empty_graph",
+  "task": {
+    "id": "who_godrej_empty_graph",
+    "predicate": "who",
+    "request": "Who do we know at Godrej Material Handling?",
+    "book": "suryodaya",
+    "expect_name": null,
+    "allow_empty": true
+  },
+  "started_at": "20260923T032335Z",
+  "outcome": "approve",
+  "detail": "empty graph stated; no invented people",
+  "result": {
+    "refused": false,
+    "reason": null,
+    "clusters": [],
+    "who": [],
+    "company": "Godrej Material Handling",
+    "notes": [
+      "Found org Godrej Material Handling (2e1372ed-7550-485e-8598-22c213241354) but no relationship or company_name edges. Not inventing a contact."
+    ],
+    "graph_empty": true
+  },
+  "calls": [
+    {
+      "method": "initialize",
+      "http": 200,
+      "id": 1,
+      "params": {
+        "protocolVersion": "2025-11-25",
+        "capabilities": {},
+        "clientInfo": {
+          "name": "team27-harness",
+          "version": "0.1"
+        }
+      },
+      "ok": true
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 2,
+      "params": {
+        "name": "Party.list",
+        "arguments": {
+          "search": "Godrej Material Handling",
+          "limit": 50
+        }
+      },
+      "ok": true,
+      "tool": "Party.list",
+      "arguments": {
+        "search": "Godrej Material Handling",
+        "limit": 50
+      }
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 3,
+      "params": {
+        "name": "Party.get",
+        "arguments": {
+          "id": "2e1372ed-7550-485e-8598-22c213241354"
+        }
+      },
+      "ok": true,
+      "tool": "Party.get",
+      "arguments": {
+        "id": "2e1372ed-7550-485e-8598-22c213241354"
+      }
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 4,
+      "params": {
+        "name": "PartyRelationship.list",
+        "arguments": {
+          "to_party_id": "2e1372ed-7550-485e-8598-22c213241354",
+          "limit": 100
+        }
+      },
+      "ok": true,
+      "tool": "PartyRelationship.list",
+      "arguments": {
+        "to_party_id": "2e1372ed-7550-485e-8598-22c213241354",
+        "limit": 100
+      }
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 5,
+      "params": {
+        "name": "PartyRelationship.list",
+        "arguments": {
+          "from_party_id": "2e1372ed-7550-485e-8598-22c213241354",
+          "limit": 100
+        }
+      },
+      "ok": true,
+      "tool": "PartyRelationship.list",
+      "arguments": {
+        "from_party_id": "2e1372ed-7550-485e-8598-22c213241354",
+        "limit": 100
+      }
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 6,
+      "params": {
+        "name": "Party.list",
+        "arguments": {
+          "search": "Godrej Material Handling",
+          "limit": 50
+        }
+      },
+      "ok": true,
+      "tool": "Party.list",
+      "arguments": {
+        "search": "Godrej Material Handling",
+        "limit": 50
+      }
+    }
+  ],
+  "me": {
+    "email": "team27@theschoolofai.in",
+    "allowed_apps": [
+      "agent",
+      "crm"
+    ],
+    "roles": [
+      "user",
+      "agent_user",
+      "sales_viewer"
+    ]
+  }
+}

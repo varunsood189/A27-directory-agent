@@ -1,0 +1,8 @@
+{
+  "id": "find_and_who_keystone",
+  "predicate": "who",
+  "request": "Deduplicate the customer list, and tell me who we know at Hocking Hills Mower Works.",
+  "book": "keystone",
+  "expect_name": "Matt Swaim",
+  "allow_empty": false
+}

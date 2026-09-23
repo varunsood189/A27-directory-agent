@@ -1,0 +1,6 @@
+{
+  "id": "deduplicate_customers",
+  "predicate": "deduplicate",
+  "request": "Deduplicate the customer list.",
+  "book": "suryodaya"
+}

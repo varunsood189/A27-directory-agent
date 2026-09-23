@@ -1,0 +1,8 @@
+{
+  "id": "who_godrej_empty_graph",
+  "predicate": "who",
+  "request": "Who do we know at Godrej Material Handling?",
+  "book": "suryodaya",
+  "expect_name": null,
+  "allow_empty": true
+}

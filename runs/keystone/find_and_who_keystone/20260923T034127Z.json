@@ -1,0 +1,185 @@
+{
+  "task_id": "find_and_who_keystone",
+  "task": {
+    "id": "find_and_who_keystone",
+    "predicate": "who",
+    "request": "Deduplicate the customer list, and tell me who we know at Hocking Hills Mower Works.",
+    "book": "keystone",
+    "expect_name": "Matt Swaim",
+    "allow_empty": false
+  },
+  "started_at": "20260923T034127Z",
+  "outcome": "approve",
+  "detail": "who-list ids exist in Party.get",
+  "result": {
+    "refused": false,
+    "reason": null,
+    "clusters": [],
+    "who": [
+      {
+        "id": "92221acd-cdcc-4884-9093-572409e2d02f",
+        "name": "Matt Swaim",
+        "email": "mswaim@hockinghillsmower.com",
+        "job_title": "VP Manufacturing",
+        "relationship": "represents",
+        "notes": "VP Manufacturing at Hocking Hills Mower Works",
+        "org_id": "1a849375-10c0-462d-988a-12f387a011fa",
+        "org_name": "Hocking Hills Mower Works"
+      }
+    ],
+    "company": "Hocking Hills Mower Works",
+    "notes": []
+  },
+  "calls": [
+    {
+      "method": "initialize",
+      "http": 200,
+      "id": 1,
+      "params": {
+        "protocolVersion": "2025-11-25",
+        "capabilities": {},
+        "clientInfo": {
+          "name": "team27-harness",
+          "version": "0.1"
+        }
+      },
+      "ok": true
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 2,
+      "params": {
+        "name": "Party.list",
+        "arguments": {
+          "sort_by": "name",
+          "sort_order": "asc",
+          "limit": 100,
+          "offset": 0
+        }
+      },
+      "ok": true,
+      "tool": "Party.list",
+      "arguments": {
+        "sort_by": "name",
+        "sort_order": "asc",
+        "limit": 100,
+        "offset": 0
+      }
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 3,
+      "params": {
+        "name": "Party.list",
+        "arguments": {
+          "search": "Hocking Hills Mower Works",
+          "limit": 50
+        }
+      },
+      "ok": true,
+      "tool": "Party.list",
+      "arguments": {
+        "search": "Hocking Hills Mower Works",
+        "limit": 50
+      }
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 4,
+      "params": {
+        "name": "Party.get",
+        "arguments": {
+          "id": "1a849375-10c0-462d-988a-12f387a011fa"
+        }
+      },
+      "ok": true,
+      "tool": "Party.get",
+      "arguments": {
+        "id": "1a849375-10c0-462d-988a-12f387a011fa"
+      }
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 5,
+      "params": {
+        "name": "PartyRelationship.list",
+        "arguments": {
+          "to_party_id": "1a849375-10c0-462d-988a-12f387a011fa",
+          "limit": 100
+        }
+      },
+      "ok": true,
+      "tool": "PartyRelationship.list",
+      "arguments": {
+        "to_party_id": "1a849375-10c0-462d-988a-12f387a011fa",
+        "limit": 100
+      }
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 6,
+      "params": {
+        "name": "Party.get",
+        "arguments": {
+          "id": "92221acd-cdcc-4884-9093-572409e2d02f"
+        }
+      },
+      "ok": true,
+      "tool": "Party.get",
+      "arguments": {
+        "id": "92221acd-cdcc-4884-9093-572409e2d02f"
+      }
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 7,
+      "params": {
+        "name": "PartyRelationship.list",
+        "arguments": {
+          "from_party_id": "1a849375-10c0-462d-988a-12f387a011fa",
+          "limit": 100
+        }
+      },
+      "ok": true,
+      "tool": "PartyRelationship.list",
+      "arguments": {
+        "from_party_id": "1a849375-10c0-462d-988a-12f387a011fa",
+        "limit": 100
+      }
+    },
+    {
+      "method": "tools/call",
+      "http": 200,
+      "id": 8,
+      "params": {
+        "name": "Party.get",
+        "arguments": {
+          "id": "92221acd-cdcc-4884-9093-572409e2d02f"
+        }
+      },
+      "ok": true,
+      "tool": "Party.get",
+      "arguments": {
+        "id": "92221acd-cdcc-4884-9093-572409e2d02f"
+      }
+    }
+  ],
+  "me": {
+    "email": "team27@theschoolofai.in",
+    "allowed_apps": [
+      "agent",
+      "crm"
+    ],
+    "roles": [
+      "user",
+      "agent_user",
+      "sales_viewer"
+    ]
+  }
+}

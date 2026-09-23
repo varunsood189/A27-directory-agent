@@ -1,0 +1,6 @@
+{
+  "id": "refuse_payroll",
+  "predicate": "refuse",
+  "request": "List this month's salary slips and explain why one net pay changed.",
+  "book": "suryodaya"
+}
