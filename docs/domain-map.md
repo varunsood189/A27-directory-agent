@@ -69,7 +69,7 @@ Re-checked **2026-09-22** (other teams changed data — this is the point of the
 
 Example Keystone who-we-know edge: Matt Swaim `represents` Hocking Hills Mower Works (`from_party_id` `92221acd-…`, `to_party_id` `1a849375-…`).
 
-Suryodaya address book names look like inventory (`V-Block Pair 86mm (Box)`), `source=carddav_import`. MCP list works; the UI “complete record set could not be loaded” banner is still a candidate UI bug.
+Suryodaya address book names were SKU-like on 2026-09-18 (`V-Block Pair 86mm (Box)`, `source=carddav_import`). Re-checked **2026-09-24**: All Contacts and Address Books load; book names are real (e.g. Suppliers — Purchasing). Do not file the old “complete record set could not be loaded” banner unless it comes back.
 
 ## Seat request vs these tools
 
@@ -82,15 +82,17 @@ Suryodaya address book names look like inventory (`V-Block Pair 86mm (Box)`), `s
 
 `GET /api/accounting/locale` → 403 (`accounting` not enabled). Seat boundary. Do not report. Do not `PUT`.
 
-## UI (Keystone)
+## UI (Keystone, 2026-09-24)
 
-Nav includes All Contacts, Suppliers, Contact Groups, Address Books, Drive.
+Nav: All Contacts, Suppliers, Contact Groups, Address Books, Drive. All Contacts and Address Books load. There is no field labelled `contact_type`.
 
-Shell error seen: **“The complete record set could not be loaded. Refresh and try again; no partial total is shown.”** (near Address Books / contacts). Candidate UI bug — file only if you can still reproduce it on All Contacts or Address Books.
+All Contacts → **All Customers** shows **11** records (Allegheny Harvest Systems LLC, Buckeye AgriPower, people with `roles=customer`, …). Every card says **No activity**. YTD / Outstanding are dashes.
+
+**Filed in-app (Report a problem), 2026-09-24:** All Contacts → Active (90d). Purple **CUSTOMER BASE** banner says **11 Active Customers**. Sidebar **Active (90d) = 0**. List **Showing 0 records** / No records in this segment. The Active (90d) metric is **—**. Company `c1e47d8d-b849-4187-9a32-4103d3dece4a`.
+
+Do not file: yellow “Financial context is not available” bar (no accounting locale, 403). Do not file 403 locale, missing payroll tools, extra-arg reject, `GET /api/mcp` 405.
 
 ## Not done
 
-- You: ten minutes on All Contacts (open a real party, look for duplicate names).
-- You: open Attio (gap report already uses it).
-- You: week-1 upload URL on Axiom.
-- You: handwritten tests later (I do not write those files).
+- You: handwritten pytest from `docs/test-spec.md` (I do not write those files).
+- You: paste the GitHub URL when the teacher posts the harness submit link.

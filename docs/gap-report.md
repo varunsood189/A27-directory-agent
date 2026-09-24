@@ -2,7 +2,7 @@
 
 Seat 27 Directory Agent. Week 1. Comparison: [Attio](https://attio.com) ([pricing](https://attio.com/pricing), [hosted MCP](https://docs.attio.com/mcp/overview)). Same role Rillet plays for Ledger: AI-native CRM that already ships MCP (`merge-records`, `upsert-record`, “find all contacts at Stripe”).
 
-Live book, team27, 2026-09-22: Suryodaya **194** parties, **0** `PartyRelationship` rows, named duplicates `Aarti Deshpande` / `Aarti Deshpande (2)` (and six similar `(2)`/`(3)` prospects). Keystone **100** parties, **28** relationships; **Hocking Hills Mower Works** → **Matt Swaim** (`represents`, VP Manufacturing). `contact_type=customer` is 44 vs **0** — that filter is not “the customer list” on the US book.
+Live book, team27, 2026-09-22: Suryodaya **194** parties, **0** `PartyRelationship` rows, named duplicates `Aarti Deshpande` / `Aarti Deshpande (2)` (and six similar `(2)`/`(3)` prospects). Keystone **100** parties, **28** relationships; **Hocking Hills Mower Works** → **Matt Swaim** (`represents`, VP Manufacturing). `contact_type=customer` is 44 vs **0** — that filter is not “the customer list” on the US book. UI on Keystone All Contacts (2026-09-24) lists those 11 customers; in-app report filed for the **11 Active Customers** banner vs **Active (90d)** empty/0.
 
 ## 1. What they do that we do not
 
