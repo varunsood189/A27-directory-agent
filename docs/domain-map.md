@@ -99,6 +99,5 @@ Do not file: yellow “Financial context is not available” bar (no accounting 
 
 ## Not done
 
-- You: paste bug 1’s in-app id into [`docs/bugs.md`](bugs.md) if you still have it.
 - You: handwritten pytest from `docs/test-spec.md` (I do not write those files).
 - You: paste the GitHub URL when the teacher posts the harness submit link.
