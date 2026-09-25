@@ -26,7 +26,7 @@ Writes to the shared party list are off unless `APPLY_WRITES=1`. Default is iden
 
 | Path | What |
 |---|---|
-| `docs/gap-report.md` | Week 1. Attio vs Directory. |
+| `docs/gap-report.md` | Attio vs Directory. Filed/to-file Directory bugs. Do not copy team20 Files reports. |
 | `docs/domain-map.md` | Live Party / relationships. |
 | `docs/test-spec.md` | Cases **you** type as pytest. Generated tests score 0. |
 | `src/` | MCP client + Directory agent. |

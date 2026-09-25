@@ -47,16 +47,21 @@ Course guide on Keystone matches this seat: **Seat 27 · Directory Agent**, Cont
 
 Also present (not the Directory goals): `FileAttachment.*`, agent workspace, CRM extras.
 
-## Live counts (2026-09-18, MCP)
+## Live counts (re-measured 2026-09-25, MCP)
 
 | | Suryodaya | Keystone |
 |---|---|---|
 | `Party.list` | 194 | 100 |
 | `type=organization` | 16 | 18 |
-| `contact_type=customer` | 44 | **0** — do not use this filter as “the customer list” |
-| `PartyRelationship.list` | **0** | 28, mostly `represents` (person → org) |
-| `AddressBook.list` | 8 | 3 |
+| `contact_type=customer` | **44** (matches `roles.customer`) | **0** — all 100 `contact_type` null; **11** `roles.customer` |
+| `Party.list` `roles` filter | rejected (`additionalProperties: false`) | same |
+| `PartyRelationship.list` omitted filter | **0** | **28**, all `represents` |
+| `PartyRelationship.list relationship=associate` (schema default) | 0 | **0** — do not send the advertised default |
+| `AddressBook.list` | 8, real names | 3 (`Suppliers`, `Team`, `Personal`) |
 | `ContactGroup.list` | 12 | 3 |
+| `Party.delete` / `Party.merge` | absent | absent |
+
+`Party.list` advertised defaults include `currency_id: locale:base_currency`. Sending that string returns **0** rows (same class as team20 bug 1 — do not re-file). `search: "%"` or `"_"` matches the whole book (team20 bug 2 — do not re-file).
 
 `Party` rows: `name` filled; `first_name` / `last_name` / `job_title` / `company_name` often null. `Party.delete` is not in `tools/list`. Dedup is update + relationship, not delete.
 
@@ -90,9 +95,11 @@ All Contacts → **All Customers** shows **11** records (Allegheny Harvest Syste
 
 **Filed in-app (Report a problem), 2026-09-24:** All Contacts → Active (90d). Purple **CUSTOMER BASE** banner says **11 Active Customers**. Sidebar **Active (90d) = 0**. List **Showing 0 records** / No records in this segment. The Active (90d) metric is **—**. Company `c1e47d8d-b849-4187-9a32-4103d3dece4a`.
 
-Do not file: yellow “Financial context is not available” bar (no accounting locale, 403). Do not file 403 locale, missing payroll tools, extra-arg reject, `GET /api/mcp` 405.
+Do not file: yellow “Financial context is not available” bar (no accounting locale, 403). Do not file 403 locale, missing payroll tools, extra-arg reject, `GET /api/mcp` 405. Do not re-file team20’s Files/platform reports (`%` search, advertised list defaults, people directory lists companies, scheduler, Drive, …).
 
 ## Not done
 
+- You: file Directory bug 2 (Keystone `contact_type` vs `roles`) from `docs/gap-report.md`. Do not re-file team20’s 17+.
+- You: paste report ids into the gap-report table.
 - You: handwritten pytest from `docs/test-spec.md` (I do not write those files).
 - You: paste the GitHub URL when the teacher posts the harness submit link.
