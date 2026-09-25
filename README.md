@@ -1,12 +1,20 @@
-# AgentSwitch Directory seat (team27 / A27)
+# Directory Agent — AgentSwitch (Team 27)
 
-**Week 1 for the teacher:** [`docs/gap-report.md`](docs/gap-report.md)
-
-One agent on this machine, driving Directory over MCP.
+Seat **27 · Directory**. Contacts spine (`Party` / `PartyRelationship`). One MCP agent for both books.
 
 > Deduplicate the customer list, and tell me who we know at this company.
 
-## Run
+Goals: `directory.deduplicate_customers`, `directory.who_do_we_know`.
+
+## Week 1 — Gap report
+
+- [Gap report vs Attio](docs/gap-report.md)
+- [Bugs filed (2 valid)](docs/bugs.md)
+- [Domain map](docs/domain-map.md)
+
+## Agent + harness
+
+MCP only (`POST /api/mcp`). Both books. Writes off unless `APPLY_WRITES=1`.
 
 ```bash
 export AS_SURYODAYA=https://agentswitch.theschoolofai.in
@@ -20,17 +28,10 @@ python3 src/run_agent.py --book keystone --request "Who do we know at Hocking Hi
 python3 harness/run.py
 ```
 
-Writes to the shared party list are off unless `APPLY_WRITES=1`. Default is identify + re-get.
-
-## What is in this repo
-
 | Path | What |
 |---|---|
-| `docs/gap-report.md` | Attio vs Directory. |
-| `docs/bugs.md` | Directory in-app bugs + evidence. Do not copy team20 Files reports. |
-| `docs/domain-map.md` | Live Party / relationships. |
+| `src/` | MCP client + Directory agent |
+| `harness/` | Five tasks, two books. Who-we-know scored by relationship id sets. Journals under `runs/` |
 | `docs/test-spec.md` | Cases **you** type as pytest. Generated tests score 0. |
-| `src/` | MCP client + Directory agent. |
-| `harness/` | Tasks, who-we-know scored by relationship id sets, journals under `runs/`. |
 
-Do not wrap `GET /api/agent/tools`. Do not `PUT /api/accounting/locale`.
+Do not wrap `GET /api/agent/tools`. Do not `PUT /api/accounting/locale`. Do not re-file team20 Files/platform reports.
