@@ -26,10 +26,11 @@ Writes to the shared party list are off unless `APPLY_WRITES=1`. Default is iden
 
 | Path | What |
 |---|---|
-| `docs/gap-report.md` | Attio vs Directory. Filed/to-file Directory bugs. Do not copy team20 Files reports. |
+| `docs/gap-report.md` | Attio vs Directory. |
+| `docs/bugs.md` | Directory in-app bugs + evidence. Do not copy team20 Files reports. |
 | `docs/domain-map.md` | Live Party / relationships. |
 | `docs/test-spec.md` | Cases **you** type as pytest. Generated tests score 0. |
 | `src/` | MCP client + Directory agent. |
-| `harness/` | Tasks, predicates on `Party.get`, journals under `runs/`. |
+| `harness/` | Tasks, who-we-know scored by relationship id sets, journals under `runs/`. |
 
 Do not wrap `GET /api/agent/tools`. Do not `PUT /api/accounting/locale`.

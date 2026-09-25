@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from src.directory_agent import normalize_name
+from src.directory_agent import find_org, normalize_name, relationship_other_ids
 from src.mcp_client import McpClient, McpError
 
 
@@ -45,27 +45,40 @@ def check_who(client: McpClient, result: dict[str, Any], expect_name: str | None
     if result.get("refused") and not result.get("graph_empty"):
         return "revise", "who-we-know was refused for the wrong reason"
     who = result.get("who") or []
+    agent_ids = {person.get("id") for person in who if person.get("id")}
+    for pid in agent_ids:
+        if _get(client, pid) is None:
+            return "revise", f"invented id {pid}"
+
+    company = result.get("company")
+    org = find_org(client, company) if company else None
+    db_ids = relationship_other_ids(client, org["id"]) if org and org.get("id") else set()
+
     if allow_empty:
-        if who:
-            for person in who:
-                if not _get(client, person.get("id", "")):
-                    return "revise", f"invented id {person.get('id')}"
-            return "approve", "people re-got from DB"
+        if agent_ids != db_ids:
+            return "revise", f"empty-graph task: agent_ids={sorted(agent_ids)} db_ids={sorted(db_ids)}"
+        if agent_ids:
+            return "revise", "expected empty relationship graph"
         if result.get("graph_empty") or (result.get("notes") and not who):
-            return "approve", "empty graph stated; no invented people"
+            return "approve", "empty graph: agent_ids == db_ids == {}"
         return "revise", "expected empty graph or verified people"
+
     if not who:
         return "revise", "expected at least one person at the company"
+    if not org:
+        return "revise", f"org not found on re-search for {company!r}"
+    if agent_ids != db_ids:
+        return "revise", f"agent_ids={sorted(agent_ids)} != db_ids={sorted(db_ids)}"
     found = False
-    for person in who:
-        row = _get(client, person.get("id", ""))
+    for pid in agent_ids:
+        row = _get(client, pid)
         if row is None:
-            return "revise", f"invented id {person.get('id')}"
+            return "revise", f"invented id {pid}"
         if expect_name and normalize_name(row.get("name")) == normalize_name(expect_name):
             found = True
     if expect_name and not found:
         return "revise", f"{expect_name} not in re-got who-list"
-    return "approve", "who-list ids exist in Party.get"
+    return "approve", "who-list ids match PartyRelationship.list"
 
 
 def check_refuse(client: McpClient, result: dict[str, Any], calls: list[dict[str, Any]]) -> tuple[str, str]:

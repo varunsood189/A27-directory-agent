@@ -6,7 +6,7 @@ Type your own files. Ten points each. Suggested cases (you write the code):
 
 1. `Party.list` search `Ajay` returns two ids; they are not a merge cluster.
 2. A name with `(2)` shares `normalize_name` with the unsuffixed row; `Party.get` both ids still work.
-3. Keystone `PartyRelationship.list` for Hocking Hills includes Matt Swaim; Suryodaya relationship total can be 0.
+3. Keystone `PartyRelationship.list` for Hocking Hills includes Matt Swaim; who-list ids equal that set. Suryodaya relationship total can be 0.
 4. Refusal request never calls `SalarySlip` / payroll tools (inspect the journal).
 5. JSON-RPC error is still HTTP 200 — client must read `error` in the envelope.
 6. Extra MCP argument is rejected (`additionalProperties: false`).

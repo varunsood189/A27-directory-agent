@@ -22,6 +22,25 @@ REFUSE_MARKERS = (
 
 SUFFIX = re.compile(r"\s*\(\d+\)\s*$")
 
+# Keystone / schema defaults that return 0 rows if sent as filters.
+# Do not pass these on Party.list. Page everyone; use roles in memory.
+# Do not pass relationship=associate on PartyRelationship.list (Keystone graph is represents).
+PARTY_LIST_BLOCKED = frozenset(
+    {
+        "contact_type",
+        "roles",
+        "currency_id",
+        "opening_balance",
+        "portal_enabled",
+        "is_portal_enabled",
+        "taxable",
+        "is_msme",
+        "w9_on_file",
+        "is_1099_vendor",
+        "backup_withholding",
+    }
+)
+
 
 def normalize_name(name: str | None) -> str:
     text = unicodedata.normalize("NFKC", name or "")
@@ -52,6 +71,51 @@ def extract_company(request: str) -> str | None:
             if name and "customer list" not in name.lower():
                 return name
     return None
+
+
+def party_list_args(extra: dict[str, Any] | None = None) -> dict[str, Any]:
+    args = dict(extra or {})
+    blocked = PARTY_LIST_BLOCKED.intersection(args)
+    if blocked:
+        raise ValueError(f"Party.list blocked filters {sorted(blocked)}: Keystone contact_type is empty; advertised defaults return 0")
+    return args
+
+
+def find_org(client: McpClient, company: str) -> dict[str, Any] | None:
+    hits = client.call_tool("Party.list", party_list_args({"search": company, "limit": 50}))
+    orgs = [p for p in (hits.get("data") or []) if isinstance(p, dict)]
+    org = next((p for p in orgs if p.get("type") == "organization"), None)
+    if org is None:
+        org = next((p for p in orgs if normalize_name(p.get("name")) == normalize_name(company)), None)
+    if org is None and orgs:
+        org = orgs[0]
+    return org
+
+
+def relationship_rows(client: McpClient, org_id: str) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for filt in ({"to_party_id": org_id}, {"from_party_id": org_id}):
+        payload = client.call_tool("PartyRelationship.list", {**filt, "limit": 100})
+        for rel in payload.get("data") or []:
+            if not isinstance(rel, dict):
+                continue
+            rid = rel.get("id")
+            if rid:
+                if rid in seen:
+                    continue
+                seen.add(rid)
+            rows.append(rel)
+    return rows
+
+
+def relationship_other_ids(client: McpClient, org_id: str) -> set[str]:
+    ids: set[str] = set()
+    for rel in relationship_rows(client, org_id):
+        other_id = rel["from_party_id"] if rel.get("to_party_id") == org_id else rel.get("to_party_id")
+        if other_id and other_id != org_id:
+            ids.add(other_id)
+    return ids
 
 
 class DirectoryAgent:
@@ -104,7 +168,9 @@ class DirectoryAgent:
         return out
 
     def deduplicate(self) -> list[dict[str, Any]]:
-        parties = self.client.list_all("Party.list", {"sort_by": "name", "sort_order": "asc"})
+        # Page all parties. Do not filter contact_type (Keystone total 0).
+        # Do not send advertised Party.list defaults. APPLY_WRITES off: identify only.
+        parties = self.client.list_all("Party.list", party_list_args({"sort_by": "name", "sort_order": "asc"}))
         buckets: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for party in parties:
             key = normalize_name(party.get("name"))
@@ -171,13 +237,7 @@ class DirectoryAgent:
         if not company:
             return [], "No company name in the request."
 
-        hits = self.client.call_tool("Party.list", {"search": company, "limit": 50})
-        orgs = [p for p in (hits.get("data") or []) if isinstance(p, dict)]
-        org = next((p for p in orgs if p.get("type") == "organization"), None)
-        if org is None:
-            org = next((p for p in orgs if normalize_name(p.get("name")) == normalize_name(company)), None)
-        if org is None and orgs:
-            org = orgs[0]
+        org = find_org(self.client, company)
         if org is None:
             return [], f"No party matched {company!r}. Not inventing people."
 
@@ -185,28 +245,28 @@ class DirectoryAgent:
         self.client.call_tool("Party.get", {"id": org_id})
         people: dict[str, dict[str, Any]] = {}
 
-        for filt in ({"to_party_id": org_id}, {"from_party_id": org_id}):
-            rels = self.client.call_tool("PartyRelationship.list", {**filt, "limit": 100})
-            for rel in rels.get("data") or []:
-                if not isinstance(rel, dict):
-                    continue
-                other_id = rel["from_party_id"] if rel.get("to_party_id") == org_id else rel.get("to_party_id")
-                if not other_id or other_id == org_id:
-                    continue
-                person = self.client.call_tool("Party.get", {"id": other_id})
-                people[other_id] = {
-                    "id": other_id,
-                    "name": person.get("name") or rel.get("_from_party_id_display") or rel.get("_to_party_id_display"),
-                    "email": person.get("email"),
-                    "job_title": person.get("job_title"),
-                    "relationship": rel.get("relationship"),
-                    "notes": rel.get("notes"),
-                    "org_id": org_id,
-                    "org_name": org.get("name"),
-                }
+        # Omit relationship=associate (advertised default zeros Keystone represents rows).
+        for rel in relationship_rows(self.client, org_id):
+            other_id = rel["from_party_id"] if rel.get("to_party_id") == org_id else rel.get("to_party_id")
+            if not other_id or other_id == org_id:
+                continue
+            person = self.client.call_tool("Party.get", {"id": other_id})
+            people[other_id] = {
+                "id": other_id,
+                "name": person.get("name") or rel.get("_from_party_id_display") or rel.get("_to_party_id_display"),
+                "email": person.get("email"),
+                "job_title": person.get("job_title"),
+                "relationship": rel.get("relationship"),
+                "notes": rel.get("notes"),
+                "org_id": org_id,
+                "org_name": org.get("name"),
+            }
 
         if not people:
-            fallback = self.client.call_tool("Party.list", {"search": org.get("name") or company, "limit": 50})
+            fallback = self.client.call_tool(
+                "Party.list",
+                party_list_args({"search": org.get("name") or company, "limit": 50}),
+            )
             for party in fallback.get("data") or []:
                 if party.get("id") == org_id:
                     continue

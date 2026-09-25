@@ -81,7 +81,7 @@ Suryodaya address book names were SKU-like on 2026-09-18 (`V-Block Pair 86mm (Bo
 | Goal | Orchestration |
 |---|---|
 | Deduplicate | Page `Party.list`, cluster email then name, re-get, `Party.update` and/or `PartyRelationship.create` (`associate`). No merge tool. No delete. |
-| Who do we know | Keystone: `PartyRelationship.list` `represents`/`employee`/`employer`. Suryodaya: graph is empty — search / `company_name`, and refuse to invent edges. |
+| Who do we know | Keystone: `PartyRelationship.list` by `from_party_id` / `to_party_id` only (omit advertised `relationship=associate`). Suryodaya: graph is empty — do not invent edges. |
 
 ## Locale
 
@@ -93,13 +93,12 @@ Nav: All Contacts, Suppliers, Contact Groups, Address Books, Drive. All Contacts
 
 All Contacts → **All Customers** shows **11** records (Allegheny Harvest Systems LLC, Buckeye AgriPower, people with `roles=customer`, …). Every card says **No activity**. YTD / Outstanding are dashes.
 
-**Filed in-app (Report a problem), 2026-09-24:** All Contacts → Active (90d). Purple **CUSTOMER BASE** banner says **11 Active Customers**. Sidebar **Active (90d) = 0**. List **Showing 0 records** / No records in this segment. The Active (90d) metric is **—**. Company `c1e47d8d-b849-4187-9a32-4103d3dece4a`.
+**Ledger:** [`docs/bugs.md`](bugs.md). Bug 1 filed 24 Sep (Active 90d vs 11 Active Customers). Bug 2 filed 25 Sep (`contact_type` vs `roles`, `94be1601-6dd1-4ade-a01c-38317e39d9a1`).
 
 Do not file: yellow “Financial context is not available” bar (no accounting locale, 403). Do not file 403 locale, missing payroll tools, extra-arg reject, `GET /api/mcp` 405. Do not re-file team20’s Files/platform reports (`%` search, advertised list defaults, people directory lists companies, scheduler, Drive, …).
 
 ## Not done
 
-- You: file Directory bug 2 (Keystone `contact_type` vs `roles`) from `docs/gap-report.md`. Do not re-file team20’s 17+.
-- You: paste report ids into the gap-report table.
+- You: paste bug 1’s in-app id into [`docs/bugs.md`](bugs.md) if you still have it.
 - You: handwritten pytest from `docs/test-spec.md` (I do not write those files).
 - You: paste the GitHub URL when the teacher posts the harness submit link.

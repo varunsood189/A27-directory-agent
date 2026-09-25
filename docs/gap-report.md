@@ -15,19 +15,11 @@ Competitor product, not our defects:
 
 ## Filed / to-file defects (ours, not Attio features)
 
-Do **not** re-file team20 Files/platform reports (filter defaults, `%`/`_` search, date-as-text, enum omit, scheduler, Drive revisions, `content_hash`, token counter, people-directory-lists-companies, …). Those are already on the class board.
-
-| # | Bug | Book | Status |
-|---|---|---|---|
-| 1 | All Contacts banner **11 Active Customers** vs segment **Active (90d) = 0** and empty list | Keystone | Filed in-app 24 Sep. Paste the report id here when you have it. |
-| 2 | `Party.list contact_type=customer` total **0**; all `contact_type` null; **11** rows have `roles.customer`; `roles` is **not** an accepted list filter. UI All Customers shows those 11. Suryodaya same filter returns 44. | Keystone | **File this.** Paste below. |
-| — | `Party.merge` / `Party.delete` missing | both | Feature request only if you want a third report. Not a crash. |
-
-Agent workarounds already in this repo: page all parties (do not send advertised `Party.list` defaults — `currency_id=locale:base_currency` returns 0, same class as team20 #1). Do not send `PartyRelationship.list relationship=associate` (advertised default; Keystone graph is all `represents`, total becomes 0). Do not filter Keystone customers on `contact_type`. Never call missing payroll tools.
+Directory-only ledger: [`docs/bugs.md`](bugs.md). Two reports: Active (90d) vs **11 Active Customers** (filed 24 Sep); Keystone `contact_type=customer` total 0 vs 11 `roles.customer` (filed 25 Sep, `94be1601-6dd1-4ade-a01c-38317e39d9a1`). Do **not** re-file team20 Files/platform reports.
 
 ## 2. Which gaps an agent can close with today’s tools
 
-Graded goals: `directory.deduplicate_customers`, `directory.who_do_we_know` (empty official predicates — harness uses `Party.get` ids).
+Graded goals: `directory.deduplicate_customers`, `directory.who_do_we_know` (empty official predicates — harness re-gets `Party.get` ids and compares who-we-know to an independent `PartyRelationship.list` id set).
 
 Closeable now: `Party.list` + `Party.get`; cluster on normalised name (strip ` (2)`); re-get before any write; `PartyRelationship.create` `associate` — never delete. On Keystone, `PartyRelationship.list` `from_party_id` / `to_party_id` (omit `relationship` unless you mean it). On Suryodaya, say the graph is empty. Refuse payroll. Do not pass extra args (`additionalProperties: false` is correct, not a bug).
 
