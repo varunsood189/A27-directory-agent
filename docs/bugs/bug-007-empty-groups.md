@@ -2,7 +2,8 @@
 
 **Book:** Suryodaya `5cbe5a55-af74-4363-a436-f5350593114c`  
 **Screen:** Contact Groups  
-**Tool:** `ContactGroup.list` + `ContactGroupMember.list`
+**Tool:** `ContactGroup.list` + `ContactGroupMember.list`  
+**Report id:** `24977785-8824-4e22-8aff-e4d719b56dcc`
 
 ## Repro
 

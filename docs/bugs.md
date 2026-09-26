@@ -12,7 +12,7 @@ Do **not** re-file team20 #1–17 or team17 Contracts reports. Do not file 403 l
 | 4 | 2026-09-26 | `Party.get` (also AddressBook/ContactGroup/PartyRelationship.get) | Missing id is `not_found` but JSON-RPC code is **-32602** (invalid params), not a not-found code. | Medium | [bug-004-not-found-code.md](bugs/bug-004-not-found-code.md) | `d8ec8e3e-a74a-4a6b-9b9b-e858983d1b15` |
 | 5 | 2026-09-26 | `Party.get` | `id: "not-a-uuid"` returns **Party not found**, not invalid_arguments. | Medium | [bug-005-get-non-uuid.md](bugs/bug-005-get-non-uuid.md) | `05f734c2-420f-46bd-b134-fb8f9cb3ce73` |
 | 6 | 2026-09-26 | Contact Groups | Groups named Investors / Newsletter / VIP Clients. All 6 members on both books are **organizations**, not people. | Medium | [bug-006-groups-are-orgs.md](bugs/bug-006-groups-are-orgs.md) | `5e2bf33f-6391-4c1c-a4d1-fe0ed321d80b` |
-| 7 | 2026-09-26 | `ContactGroup.list` | Suryodaya: **9 of 12** groups have **0** members (departmental names). All 6 members sit in Investors/Newsletter/VIP. | Medium | [bug-007-empty-groups.md](bugs/bug-007-empty-groups.md) | to-file |
+| 7 | 2026-09-26 | `ContactGroup.list` | Suryodaya: **9 of 12** groups have **0** members (departmental names). All 6 members sit in Investors/Newsletter/VIP. | Medium | [bug-007-empty-groups.md](bugs/bug-007-empty-groups.md) | `24977785-8824-4e22-8aff-e4d719b56dcc` |
 | 8 | 2026-09-26 | `AddressBook.list` | Suryodaya: **5 of 8** books have **0** entries (`Suppliers — Purchasing`, …). All 8 entries sit in Suppliers/Team/Personal. | Medium | [bug-008-empty-address-books.md](bugs/bug-008-empty-address-books.md) | to-file |
 | 9 | 2026-09-26 | `Party.list` / Party record | Suryodaya: `first_name` and `last_name` null on the listed individuals; `sort_by=first_name` returns **organizations**. `name` is filled. | High | [bug-009-empty-first-last.md](bugs/bug-009-empty-first-last.md) | to-file |
 | 10 | 2026-09-26 | `Party.list` search | `search: ""` → total 194. `search: "   "` (spaces) → total **0**. | Low | [bug-010-search-whitespace.md](bugs/bug-010-search-whitespace.md) | to-file |
@@ -29,7 +29,7 @@ Directory customer/who-we-know tools disagree with their own schema: `contact_ty
 
 ## Total
 
-6 filed. **4 to-file** (7–10 on Suryodaya). 0 withdrawn. 0 duplicates.
+7 filed. **3 to-file**. 0 withdrawn. 0 duplicates.
 
 ## How these were found (not Ask Agent)
 
@@ -45,7 +45,7 @@ Bugs were measured with **MCP** `POST /api/mcp` (login as team27, same as the Di
 | 4 | MCP only (error code) | **Filed** `d8ec8e3e-a74a-4a6b-9b9b-e858983d1b15` |
 | 5 | MCP only (bad id) | **Filed** `05f734c2-420f-46bd-b134-fb8f9cb3ce73` |
 | 6 | Yes — Contact Groups | **Filed** `5e2bf33f-6391-4c1c-a4d1-fe0ed321d80b` |
-| 7 | Yes — Suryodaya Contact Groups | Keep. |
+| 7 | Yes — Suryodaya Contact Groups | **Filed** `24977785-8824-4e22-8aff-e4d719b56dcc` |
 | 8 | Yes — Suryodaya Address Books | Keep. |
 | 9 | Yes — open a Suryodaya person; first/last empty. `sort_by=first_name` is MCP | Keep. |
 | 10 | Yes — All Contacts search, type only spaces | Keep (low). |
