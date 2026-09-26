@@ -15,7 +15,7 @@ Competitor product, not our defects:
 
 ## Filed / to-file defects (ours, not Attio features)
 
-Directory-only ledger: [`docs/bugs.md`](bugs.md). 7 filed, 3 to-file. Do **not** re-file team20 Files/platform reports.
+Directory-only ledger: [`docs/bugs.md`](bugs.md). 8 filed, 2 to-file. Do **not** re-file team20 Files/platform reports.
 
 ## 2. Which gaps an agent can close with today’s tools
 
