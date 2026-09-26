@@ -15,7 +15,7 @@ Competitor product, not our defects:
 
 ## Filed / to-file defects (ours, not Attio features)
 
-Directory-only ledger: [`docs/bugs.md`](bugs.md). Two reports: Active (90d) vs **11 Active Customers** (filed 24 Sep); Keystone `contact_type=customer` total 0 vs 11 `roles.customer` (filed 25 Sep, `94be1601-6dd1-4ade-a01c-38317e39d9a1`). Do **not** re-file team20 Files/platform reports.
+Directory-only ledger: [`docs/bugs.md`](bugs.md). 2 filed, 8 to-file from the 26 Sep hunt. Do **not** re-file team20 Files/platform reports.
 
 ## 2. Which gaps an agent can close with today’s tools
 
