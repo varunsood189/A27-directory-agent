@@ -1,6 +1,7 @@
 # Bug 6 — Contact groups named for people hold only companies
 
-**Books:** both. **Screen:** Contact Groups → Investors / Newsletter / VIP Clients.
+**Books:** both. **Screen:** Contact Groups → Investors / Newsletter / VIP Clients.  
+**Report id:** `5e2bf33f-6391-4c1c-a4d1-fe0ed321d80b` (filed on Keystone)
 
 ## Repro
 
