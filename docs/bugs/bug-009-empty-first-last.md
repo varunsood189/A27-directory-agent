@@ -1,7 +1,8 @@
 # Bug 9 — Suryodaya first_name / last_name empty; sort_by first_name returns orgs
 
 **Book:** Suryodaya. **Screen:** All Contacts, open a person (e.g. Aarti Bhosale).  
-**Tool:** `Party.list`
+**Tool:** `Party.list`  
+**Report id:** `b1bd54a6-00b5-4a05-8f11-6a34dab4fe6b`
 
 ## Repro
 

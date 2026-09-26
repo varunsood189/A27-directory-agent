@@ -93,7 +93,7 @@ Nav: All Contacts, Suppliers, Contact Groups, Address Books, Drive. All Contacts
 
 All Contacts → **All Customers** shows **11** records (Allegheny Harvest Systems LLC, Buckeye AgriPower, people with `roles=customer`, …). Every card says **No activity**. YTD / Outstanding are dashes.
 
-**Ledger:** [`docs/bugs.md`](bugs.md). Bugs 1–8 filed (ids in bugs.md). 9–10 still Suryodaya.
+**Ledger:** [`docs/bugs.md`](bugs.md). Bugs 1–9 filed (ids in bugs.md). Bug 10 still Suryodaya search-spaces.
 
 Do not file: yellow “Financial context is not available” bar (no accounting locale, 403). Do not file 403 locale, missing payroll tools, extra-arg reject, `GET /api/mcp` 405. Do not re-file team20’s Files/platform reports (`%` search, advertised list defaults, people directory lists companies, scheduler, Drive, …).
 

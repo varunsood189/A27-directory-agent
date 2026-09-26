@@ -14,7 +14,7 @@ Do **not** re-file team20 #1–17 or team17 Contracts reports. Do not file 403 l
 | 6 | 2026-09-26 | Contact Groups | Groups named Investors / Newsletter / VIP Clients. All 6 members on both books are **organizations**, not people. | Medium | [bug-006-groups-are-orgs.md](bugs/bug-006-groups-are-orgs.md) | `5e2bf33f-6391-4c1c-a4d1-fe0ed321d80b` |
 | 7 | 2026-09-26 | `ContactGroup.list` | Suryodaya: **9 of 12** groups have **0** members (departmental names). All 6 members sit in Investors/Newsletter/VIP. | Medium | [bug-007-empty-groups.md](bugs/bug-007-empty-groups.md) | `24977785-8824-4e22-8aff-e4d719b56dcc` |
 | 8 | 2026-09-26 | `AddressBook.list` | Suryodaya: **5 of 8** books have **0** entries (`Suppliers — Purchasing`, …). All 8 entries sit in Suppliers/Team/Personal. | Medium | [bug-008-empty-address-books.md](bugs/bug-008-empty-address-books.md) | `61654fd2-bc0d-4bad-8182-4c3421a362b0` |
-| 9 | 2026-09-26 | `Party.list` / Party record | Suryodaya: `first_name` and `last_name` null on the listed individuals; `sort_by=first_name` returns **organizations**. `name` is filled. | High | [bug-009-empty-first-last.md](bugs/bug-009-empty-first-last.md) | to-file |
+| 9 | 2026-09-26 | `Party.list` / Party record | Suryodaya: `first_name` and `last_name` null on the listed individuals; `sort_by=first_name` returns **organizations**. `name` is filled. | High | [bug-009-empty-first-last.md](bugs/bug-009-empty-first-last.md) | `b1bd54a6-00b5-4a05-8f11-6a34dab4fe6b` |
 | 10 | 2026-09-26 | `Party.list` search | `search: ""` → total 194. `search: "   "` (spaces) → total **0**. | Low | [bug-010-search-whitespace.md](bugs/bug-010-search-whitespace.md) | to-file |
 
 ## Pattern
@@ -29,7 +29,7 @@ Directory customer/who-we-know tools disagree with their own schema: `contact_ty
 
 ## Total
 
-8 filed. **2 to-file**. 0 withdrawn. 0 duplicates.
+9 filed. **1 to-file**. 0 withdrawn. 0 duplicates.
 
 ## How these were found (not Ask Agent)
 
@@ -47,7 +47,7 @@ Bugs were measured with **MCP** `POST /api/mcp` (login as team27, same as the Di
 | 6 | Yes — Contact Groups | **Filed** `5e2bf33f-6391-4c1c-a4d1-fe0ed321d80b` |
 | 7 | Yes — Suryodaya Contact Groups | **Filed** `24977785-8824-4e22-8aff-e4d719b56dcc` |
 | 8 | Yes — Suryodaya Address Books | **Filed** `61654fd2-bc0d-4bad-8182-4c3421a362b0` |
-| 9 | Yes — open a Suryodaya person; first/last empty. `sort_by=first_name` is MCP | Keep. |
+| 9 | Yes — open a Suryodaya person; first/last empty. `sort_by=first_name` is MCP | **Filed** `b1bd54a6-00b5-4a05-8f11-6a34dab4fe6b` |
 | 10 | Yes — All Contacts search, type only spaces | Keep (low). |
 
 **Not bugs on the screenshot you pasted:** yellow financial banner; **Showing 5 records** (you are on **Tier B**, which is 5); Ask Agent unassigned; ₹ credit limits while financial context is off (do not file as 403 locale). **Lapsed=11** / **New This Quarter=11** is the same family as bug 1 — do not file a second report.
