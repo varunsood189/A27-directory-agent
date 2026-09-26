@@ -1,6 +1,7 @@
 # Bug 5 — Party.get non-UUID is “not found”
 
-**Book:** either. **Tool:** `Party.get`
+**Book:** either. **Tool:** `Party.get`  
+**Report id:** `05f734c2-420f-46bd-b134-fb8f9cb3ce73` (filed on Keystone)
 
 ## Repro
 
