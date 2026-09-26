@@ -2,7 +2,8 @@
 
 **Book:** Keystone `c1e47d8d-b849-4187-9a32-4103d3dece4a`  
 **Tool:** `PartyRelationship.list`  
-**File from:** Keystone **All Contacts**. Do **not** use Ask Agent (seat not assigned). Repro is MCP `PartyRelationship.list`.
+**File from:** Keystone **All Contacts**. Do **not** use Ask Agent (seat not assigned). Repro is MCP `PartyRelationship.list`.  
+**Report id:** `a9a923b6-ce45-482f-8f8b-3aebabc9ee03`
 
 ## Repro
 

@@ -93,7 +93,7 @@ Nav: All Contacts, Suppliers, Contact Groups, Address Books, Drive. All Contacts
 
 All Contacts → **All Customers** shows **11** records (Allegheny Harvest Systems LLC, Buckeye AgriPower, people with `roles=customer`, …). Every card says **No activity**. YTD / Outstanding are dashes.
 
-**Ledger:** [`docs/bugs.md`](bugs.md). Bug 1 filed 24 Sep (Active 90d vs 11 Active Customers). Bug 2 filed 25 Sep (`contact_type` vs `roles`, `94be1601-6dd1-4ade-a01c-38317e39d9a1`).
+**Ledger:** [`docs/bugs.md`](bugs.md). Bug 1 filed 24 Sep (Active 90d vs 11 Active Customers). Bug 2 filed 25 Sep (`contact_type` vs `roles`, `94be1601-6dd1-4ade-a01c-38317e39d9a1`). Bug 3 filed 26 Sep (`PartyRelationship.list` default associate, `a9a923b6-ce45-482f-8f8b-3aebabc9ee03`).
 
 Do not file: yellow “Financial context is not available” bar (no accounting locale, 403). Do not file 403 locale, missing payroll tools, extra-arg reject, `GET /api/mcp` 405. Do not re-file team20’s Files/platform reports (`%` search, advertised list defaults, people directory lists companies, scheduler, Drive, …).
 
