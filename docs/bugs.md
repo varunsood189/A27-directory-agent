@@ -41,7 +41,7 @@ Bugs were measured with **MCP** `POST /api/mcp` (login as team27, same as the Di
 |---|-------------------------------|-------|
 | 1 | Yes — Keystone All Customers banner **11 Active Customers**, sidebar Active (90d) **0** | Filed. Do not re-file. |
 | 2 | UI shows 11 customers; `contact_type=customer` **0** is MCP | Filed. |
-| 3 | No UI control for `relationship=associate`. MCP only | Keep. File from All Contacts. |
+| 3 | No UI control for `relationship=associate`. MCP only | **Filed** `a9a923b6-ce45-482f-8f8b-3aebabc9ee03` |
 | 4 | MCP only (error code) | Keep. Weaker in-app demo. |
 | 5 | MCP only (bad id) | Keep. Weaker in-app demo. |
 | 6 | Yes — Contact Groups | Keep. File first after 3. |
