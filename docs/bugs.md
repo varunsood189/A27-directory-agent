@@ -31,6 +31,27 @@ Directory customer/who-we-know tools disagree with their own schema: `contact_ty
 
 2 filed. **8 to-file** (this hunt). 0 withdrawn. 0 duplicates.
 
+## How these were found (not Ask Agent)
+
+The in-app **Ask Agent** chat is **not assigned** to `team27@…` (`Your agent is not available to this login yet`). That is expected. **Do not use Ask Agent to reproduce.**
+
+Bugs were measured with **MCP** `POST /api/mcp` (login as team27, same as the Directory agent in this repo): `scripts/hunt_directory.py`. Report a problem from the matching **UI screen**; paste the measured totals. Instructor scores MCP/API defects.
+
+| # | Can you see it without agent? | Keep? |
+|---|-------------------------------|-------|
+| 1 | Yes — Keystone All Customers banner **11 Active Customers**, sidebar Active (90d) **0** | Filed. Do not re-file. |
+| 2 | UI shows 11 customers; `contact_type=customer` **0** is MCP | Filed. |
+| 3 | No UI control for `relationship=associate`. MCP only | Keep. File from All Contacts. |
+| 4 | MCP only (error code) | Keep. Weaker in-app demo. |
+| 5 | MCP only (bad id) | Keep. Weaker in-app demo. |
+| 6 | Yes — Contact Groups | Keep. File first after 3. |
+| 7 | Yes — Suryodaya Contact Groups | Keep. |
+| 8 | Yes — Suryodaya Address Books | Keep. |
+| 9 | Yes — open a Suryodaya person; first/last empty. `sort_by=first_name` is MCP | Keep. |
+| 10 | Yes — All Contacts search, type only spaces | Keep (low). |
+
+**Not bugs on the screenshot you pasted:** yellow financial banner; **Showing 5 records** (you are on **Tier B**, which is 5); Ask Agent unassigned; ₹ credit limits while financial context is off (do not file as 403 locale). **Lapsed=11** / **New This Quarter=11** is the same family as bug 1 — do not file a second report.
+
 ## How to file 3–10
 
-Stay on the screen in each paste. One report per row. Copy the block from the matching evidence file.
+Stay on the screen in each paste. One report per row. Copy the block from the matching evidence file. No Ask Agent.

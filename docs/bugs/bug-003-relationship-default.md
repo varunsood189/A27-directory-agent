@@ -2,7 +2,7 @@
 
 **Book:** Keystone `c1e47d8d-b849-4187-9a32-4103d3dece4a`  
 **Tool:** `PartyRelationship.list`  
-**File from:** Keystone → open **Hocking Hills** / All Contacts.
+**File from:** Keystone **All Contacts**. Do **not** use Ask Agent (seat not assigned). Repro is MCP `PartyRelationship.list`.
 
 ## Repro
 
