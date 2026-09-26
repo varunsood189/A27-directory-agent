@@ -9,7 +9,7 @@ Do **not** re-file team20 #1–17 or team17 Contracts reports. Do not file 403 l
 | 1 | 2026-09-24 | All Contacts → Active (90d) | Keystone banner **11 Active Customers**; sidebar **Active (90d) = 0**; list empty | Medium | [bug-001-active-customers.md](bugs/bug-001-active-customers.md) | not recovered |
 | 2 | 2026-09-25 | `Party.list` | `contact_type=customer` total **0** on Keystone; 11 `roles.customer`; no `roles` filter. Suryodaya **44**. | High | [bug-002-contact-type.md](bugs/bug-002-contact-type.md) | `94be1601-6dd1-4ade-a01c-38317e39d9a1` |
 | 3 | 2026-09-26 | `PartyRelationship.list` | Schema default `relationship=associate`. Sending it on Keystone returns **0**; omit it → **28** `represents`. Who-we-know graph disappears. | High | [bug-003-relationship-default.md](bugs/bug-003-relationship-default.md) | `a9a923b6-ce45-482f-8f8b-3aebabc9ee03` |
-| 4 | 2026-09-26 | `Party.get` (also AddressBook/ContactGroup/PartyRelationship.get) | Missing id is `not_found` but JSON-RPC code is **-32602** (invalid params), not a not-found code. | Medium | [bug-004-not-found-code.md](bugs/bug-004-not-found-code.md) | to-file |
+| 4 | 2026-09-26 | `Party.get` (also AddressBook/ContactGroup/PartyRelationship.get) | Missing id is `not_found` but JSON-RPC code is **-32602** (invalid params), not a not-found code. | Medium | [bug-004-not-found-code.md](bugs/bug-004-not-found-code.md) | `d8ec8e3e-a74a-4a6b-9b9b-e858983d1b15` |
 | 5 | 2026-09-26 | `Party.get` | `id: "not-a-uuid"` returns **Party not found**, not invalid_arguments. | Medium | [bug-005-get-non-uuid.md](bugs/bug-005-get-non-uuid.md) | to-file |
 | 6 | 2026-09-26 | Contact Groups | Groups named Investors / Newsletter / VIP Clients. All 6 members on both books are **organizations**, not people. | Medium | [bug-006-groups-are-orgs.md](bugs/bug-006-groups-are-orgs.md) | to-file |
 | 7 | 2026-09-26 | `ContactGroup.list` | Suryodaya: **9 of 12** groups have **0** members (departmental names). All 6 members sit in Investors/Newsletter/VIP. | Medium | [bug-007-empty-groups.md](bugs/bug-007-empty-groups.md) | to-file |
@@ -29,7 +29,7 @@ Directory customer/who-we-know tools disagree with their own schema: `contact_ty
 
 ## Total
 
-2 filed + **bug 3 filed**. **7 to-file**. 0 withdrawn. 0 duplicates.
+4 filed. **6 to-file**. 0 withdrawn. 0 duplicates.
 
 ## How these were found (not Ask Agent)
 
@@ -42,7 +42,7 @@ Bugs were measured with **MCP** `POST /api/mcp` (login as team27, same as the Di
 | 1 | Yes — Keystone All Customers banner **11 Active Customers**, sidebar Active (90d) **0** | Filed. Do not re-file. |
 | 2 | UI shows 11 customers; `contact_type=customer` **0** is MCP | Filed. |
 | 3 | No UI control for `relationship=associate`. MCP only | **Filed** `a9a923b6-ce45-482f-8f8b-3aebabc9ee03` |
-| 4 | MCP only (error code) | Keep. Weaker in-app demo. |
+| 4 | MCP only (error code) | **Filed** `d8ec8e3e-a74a-4a6b-9b9b-e858983d1b15` |
 | 5 | MCP only (bad id) | Keep. Weaker in-app demo. |
 | 6 | Yes — Contact Groups | Keep. File first after 3. |
 | 7 | Yes — Suryodaya Contact Groups | Keep. |

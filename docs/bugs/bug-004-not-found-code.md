@@ -1,6 +1,7 @@
 # Bug 4 — not_found uses JSON-RPC -32602
 
-**Books:** both. **Tools:** `Party.get`, `AddressBook.get`, `ContactGroup.get`, `PartyRelationship.get`
+**Books:** both. **Tools:** `Party.get`, `AddressBook.get`, `ContactGroup.get`, `PartyRelationship.get`  
+**Report id:** `d8ec8e3e-a74a-4a6b-9b9b-e858983d1b15`
 
 ## Repro
 

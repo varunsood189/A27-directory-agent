@@ -9,7 +9,7 @@ Goals: `directory.deduplicate_customers`, `directory.who_do_we_know`.
 ## Week 1 — Gap report
 
 - [Gap report vs Attio](docs/gap-report.md)
-- [Bugs](docs/bugs.md) — 3 filed, 7 to-file
+- [Bugs](docs/bugs.md) — 4 filed, 6 to-file
 - [Domain map](docs/domain-map.md)
 
 ## Agent + harness
