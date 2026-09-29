@@ -16,15 +16,7 @@ sys.path.insert(0, str(ROOT))
 from harness.predicates import check_deduplicate, check_refuse, check_who
 from src.directory_agent import DirectoryAgent
 from src.mcp_client import McpClient
-
-BOOK_URL = {
-    "suryodaya": os.environ.get("AS_SURYODAYA", "https://agentswitch.theschoolofai.in"),
-    "keystone": os.environ.get("AS_KEYSTONE", "https://class.agentswitch.theschoolofai.in"),
-}
-BOOK_PASS = {
-    "suryodaya": "AS_PASSWORD_SURYODAYA",
-    "keystone": "AS_PASSWORD_KEYSTONE",
-}
+from src import settings
 
 
 def load_tasks(only: str | None) -> list[dict]:
@@ -56,15 +48,17 @@ def score(client: McpClient, task: dict, result: dict) -> tuple[str, str]:
 
 def run_task(task: dict, email: str) -> dict:
     book = task["book"]
-    password = os.environ.get(BOOK_PASS[book])
-    if not password:
+    try:
+        password = settings.book_password(book)
+        base = settings.book_base(book)
+    except SystemExit as exc:
         return {
             "task_id": task["id"],
             "outcome": "unevaluated",
-            "detail": f"missing env {BOOK_PASS[book]}",
+            "detail": str(exc),
         }
-    client = McpClient(BOOK_URL[book], email, password, client_name="team27-harness")
-    agent = DirectoryAgent(client, apply_writes=os.environ.get("APPLY_WRITES") == "1")
+    client = McpClient(base, email, password, client_name="team27-harness")
+    agent = DirectoryAgent(client, apply_writes=settings.apply_writes())
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_dir = ROOT / "runs" / book / task["id"]
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -103,7 +97,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--task", default=None)
     args = parser.parse_args()
-    email = os.environ.get("AS_EMAIL", "team27@theschoolofai.in")
+    email = os.environ.get("AS_EMAIL") or settings.email()
     tasks = load_tasks(args.task)
     if not tasks:
         print("no tasks", file=sys.stderr)

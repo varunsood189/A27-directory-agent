@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
@@ -13,18 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from src.directory_agent import DirectoryAgent
-from src.mcp_client import McpClient
+from src.mcp_client import McpClient, McpError
+from src import settings
 
 DEFAULT_REQUEST = "Deduplicate the customer list, and tell me who we know at this company."
 
-BOOKS = {
-    "suryodaya": "AS_SURYODAYA",
-    "keystone": "AS_KEYSTONE",
-}
-PASSWORDS = {
-    "suryodaya": "AS_PASSWORD_SURYODAYA",
-    "keystone": "AS_PASSWORD_KEYSTONE",
-}
+BOOKS = ("suryodaya", "keystone")
 
 
 def main() -> int:
@@ -34,23 +27,25 @@ def main() -> int:
     parser.add_argument("--apply-writes", action="store_true")
     args = parser.parse_args()
 
-    base = os.environ.get(BOOKS[args.book])
-    password = os.environ.get(PASSWORDS[args.book])
-    email = os.environ.get("AS_EMAIL", "team27@theschoolofai.in")
-    if not base or not password:
-        missing = [k for k in (BOOKS[args.book], PASSWORDS[args.book]) if not os.environ.get(k)]
-        print(f"missing env: {missing}", file=sys.stderr)
+    try:
+        base = settings.book_base(args.book)
+        password = settings.book_password(args.book)
+        email = settings.email()
+    except SystemExit as exc:
+        print(exc, file=sys.stderr)
         return 2
-
-    if not os.environ.get(BOOKS[args.book]):
-        defaults = {
-            "suryodaya": "https://agentswitch.theschoolofai.in",
-            "keystone": "https://class.agentswitch.theschoolofai.in",
-        }
-        base = defaults[args.book]
     client = McpClient(base, email, password)
-    agent = DirectoryAgent(client, apply_writes=args.apply_writes or os.environ.get("APPLY_WRITES") == "1")
-    me = agent.connect()
+    agent = DirectoryAgent(client, apply_writes=args.apply_writes or settings.apply_writes())
+    try:
+        me = agent.connect()
+    except McpError as exc:
+        if exc.http_status == 401:
+            print(
+                f"login 401: book={args.book} url={base} email={email} password_len={len(password)}. "
+                "Put the full password in .env (gitignored). A 16-char bash export is truncated.",
+                file=sys.stderr,
+            )
+        raise
     result = agent.handle(args.request)
     print(json.dumps({"me": {"email": me.get("email"), "allowed_apps": me.get("allowed_apps")}, "result": result}, indent=2))
     return 0

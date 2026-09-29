@@ -17,14 +17,9 @@ Goals: `directory.deduplicate_customers`, `directory.who_do_we_know`.
 MCP only (`POST /api/mcp`). Both books. Writes off unless `APPLY_WRITES=1`.
 
 ```bash
-export AS_SURYODAYA=https://agentswitch.theschoolofai.in
-export AS_KEYSTONE=https://class.agentswitch.theschoolofai.in
-export AS_EMAIL=team27@theschoolofai.in
-export AS_PASSWORD_SURYODAYA='…'
-export AS_PASSWORD_KEYSTONE='…'
-
-python3 src/run_agent.py --book suryodaya
+# Passwords live in .env (gitignored). Do not `source .env` — bash strips `!`.
 python3 src/run_agent.py --book keystone --request "Who do we know at Hocking Hills Mower Works?"
+python3 src/run_agent.py --book suryodaya
 python3 harness/run.py
 ```
 
