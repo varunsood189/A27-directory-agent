@@ -10,7 +10,7 @@ Goals: `directory.deduplicate_customers`, `directory.who_do_we_know`.
 
 - [Gap report vs Attio](docs/gap-report.md)
 - [Bugs](docs/bugs.md) — **10 filed**
-- [Lab sheet (aim / apparatus / experiment)](docs/lab-sheet.md)
+- [Completeness audit](docs/completeness-audit.md)
 
 ## Agent + harness
 

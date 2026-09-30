@@ -30,6 +30,7 @@ DIR_TOOLS = (
 
 
 def schema_for(tools: list, name: str) -> dict:
+    """Return the tools/list entry whose name matches, or {}."""
     for t in tools:
         if t.get("name") == name:
             return t
@@ -37,6 +38,7 @@ def schema_for(tools: list, name: str) -> dict:
 
 
 def compact_schema(tool: dict) -> dict:
+    """Shrink an inputSchema to type/default/enum/required for the probe JSON."""
     schema = (tool.get("inputSchema") or tool.get("input_schema") or {}) if tool else {}
     props = schema.get("properties") or {}
     out = {}
@@ -52,6 +54,7 @@ def compact_schema(tool: dict) -> dict:
 
 
 def role_set(party: dict) -> set[str]:
+    """Active role names on a Party row (roles is a list of objects or strings)."""
     roles = party.get("roles") or []
     names = set()
     for item in roles:
@@ -63,6 +66,7 @@ def role_set(party: dict) -> set[str]:
 
 
 def probe_book(label: str, base: str, email: str, password: str) -> dict:
+    """Login and collect Directory counts/schemas for one book. No writes."""
     client = McpClient(base, email, password, client_name="team27-directory-probe")
     client.login()
     me = client.me()
@@ -236,6 +240,7 @@ def probe_book(label: str, base: str, email: str, password: str) -> dict:
 
 
 def main() -> None:
+    """Probe both books from env; write a gitignored summary under docs/live if configured."""
     email = os.environ["AS_EMAIL"]
     out = {}
     for label, base_key, pw_key in (

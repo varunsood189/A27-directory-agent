@@ -15,6 +15,7 @@ OUT = ROOT / "docs" / "live"
 
 
 def http_json(method: str, url: str, token: str | None = None, body: dict | None = None):
+    """POST/GET JSON; return (http_status, parsed body). Used only by this dump script."""
     data = None if body is None else json.dumps(body).encode()
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
     if token:
@@ -35,6 +36,7 @@ def http_json(method: str, url: str, token: str | None = None, body: dict | None
 
 
 def mcp_call(base, token, rpc_id, name, arguments=None):
+    """tools/call wrapper. Does not use McpClient (standalone dump)."""
     status, payload = http_json(
         "POST",
         f"{base}/api/mcp",
@@ -50,6 +52,7 @@ def mcp_call(base, token, rpc_id, name, arguments=None):
 
 
 def unwrap(payload: dict) -> dict:
+    """Pull structuredContent or JSON text from a tools/call envelope."""
     if not isinstance(payload, dict):
         return {}
     if "result" in payload and isinstance(payload["result"], dict):
@@ -67,6 +70,7 @@ def unwrap(payload: dict) -> dict:
 
 
 def dump_book(name: str, base: str, email: str, password: str) -> None:
+    """Login, handshake, list Directory tools, write JSON under docs/live/<name>/."""
     dest = OUT / name
     dest.mkdir(parents=True, exist_ok=True)
     st, login = http_json("POST", f"{base}/api/auth/login", body={"email": email, "password": password})
@@ -124,6 +128,7 @@ def dump_book(name: str, base: str, email: str, password: str) -> None:
 
 
 def main() -> None:
+    """Dump both books. Requires AS_EMAIL and both URL/password env vars."""
     email = os.environ["AS_EMAIL"]
     dump_book("suryodaya", os.environ["AS_SURYODAYA"].rstrip("/"), email, os.environ["AS_PASSWORD_SURYODAYA"])
     dump_book("keystone", os.environ["AS_KEYSTONE"].rstrip("/"), email, os.environ["AS_PASSWORD_KEYSTONE"])

@@ -12,6 +12,7 @@ from src.mcp_client import McpClient, McpError  # noqa: E402
 
 
 def connect(book: str) -> McpClient:
+    """Login and handshake one book from env. Used by the Directory bug hunt."""
     base = os.environ["AS_SURYODAYA" if book == "suryodaya" else "AS_KEYSTONE"]
     pw = os.environ["AS_PASSWORD_SURYODAYA" if book == "suryodaya" else "AS_PASSWORD_KEYSTONE"]
     c = McpClient(base, os.environ["AS_EMAIL"], pw, "team27-hunt")
@@ -21,6 +22,7 @@ def connect(book: str) -> McpClient:
 
 
 def call(c: McpClient, tool: str, args: dict):
+    """tools/call that returns ('ok', payload) or ('err', info) without raising."""
     try:
         r = c.call_tool(tool, args)
         return "ok", r
@@ -29,12 +31,14 @@ def call(c: McpClient, tool: str, args: dict):
 
 
 def total(payload):
+    """(total, page_len) from a list payload, or (None, None)."""
     if isinstance(payload, dict):
         return payload.get("total"), len(payload.get("data") or [])
     return None, None
 
 
 def schema_props(tools, name):
+    """inputSchema properties for one tool name from tools/list."""
     for t in tools:
         if t.get("name") == name:
             schema = t.get("inputSchema") or t.get("input_schema") or {}
@@ -43,6 +47,7 @@ def schema_props(tools, name):
 
 
 def hunt(book: str) -> None:
+    """Print Directory list/get/filter findings for one book. Read-only."""
     print(f"\n======== {book} ========", flush=True)
     c = connect(book)
     listed = c.rpc("tools/list")
@@ -164,6 +169,7 @@ def hunt(book: str) -> None:
 
 
 def main():
+    """Hunt Suryodaya then Keystone."""
     hunt("suryodaya")
     hunt("keystone")
 

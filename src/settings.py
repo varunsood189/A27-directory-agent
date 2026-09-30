@@ -18,6 +18,7 @@ PASSWORD_KEYS = ("AS_PASSWORD_SURYODAYA", "AS_PASSWORD_KEYSTONE")
 
 
 def parse_env_file(path: Path) -> dict[str, str]:
+    """Read KEY=value lines from a .env file. Strips matching quotes. Ignores comments."""
     out: dict[str, str] = {}
     if not path.is_file():
         return out
@@ -35,6 +36,7 @@ def parse_env_file(path: Path) -> dict[str, str]:
 
 
 def get(key: str, default: str | None = None) -> str | None:
+    """Look up a setting. For passwords, a longer .env value beats a truncated bash export."""
     file_vals = parse_env_file(ROOT / ".env")
     file_val = file_vals.get(key)
     env_val = os.environ.get(key)
@@ -50,6 +52,7 @@ def get(key: str, default: str | None = None) -> str | None:
 
 
 def book_base(book: str) -> str:
+    """Base URL for suryodaya or keystone."""
     key = "AS_SURYODAYA" if book == "suryodaya" else "AS_KEYSTONE"
     value = get(key)
     if not value:
@@ -58,6 +61,7 @@ def book_base(book: str) -> str:
 
 
 def book_password(book: str) -> str:
+    """Password for that book. Exits if missing. Prefer .env so bash cannot strip !."""
     key = "AS_PASSWORD_SURYODAYA" if book == "suryodaya" else "AS_PASSWORD_KEYSTONE"
     value = get(key)
     if not value:
@@ -69,8 +73,10 @@ def book_password(book: str) -> str:
 
 
 def email() -> str:
+    """Login email, default team27@theschoolofai.in."""
     return get("AS_EMAIL") or DEFAULTS["AS_EMAIL"]
 
 
 def apply_writes() -> bool:
+    """True only when APPLY_WRITES=1. Default is identify-only."""
     return get("APPLY_WRITES") == "1"

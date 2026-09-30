@@ -20,6 +20,7 @@ from src import settings
 
 
 def load_tasks(only: str | None) -> list[dict]:
+    """Load harness/tasks/*.json. If only is set, keep that task id."""
     folder = ROOT / "harness" / "tasks"
     tasks = []
     for path in sorted(folder.glob("*.json")):
@@ -31,6 +32,7 @@ def load_tasks(only: str | None) -> list[dict]:
 
 
 def score(client: McpClient, task: dict, result: dict) -> tuple[str, str]:
+    """Pick the predicate from the task JSON and score against live MCP."""
     kind = task["predicate"]
     if kind == "deduplicate":
         return check_deduplicate(client, result)
@@ -47,6 +49,7 @@ def score(client: McpClient, task: dict, result: dict) -> tuple[str, str]:
 
 
 def run_task(task: dict, email: str) -> dict:
+    """Run one task: journal first, then score. Returns outcome payload including journal path."""
     book = task["book"]
     try:
         password = settings.book_password(book)
@@ -94,6 +97,7 @@ def run_task(task: dict, email: str) -> dict:
 
 
 def main() -> int:
+    """Run all tasks (or --task id). Exit 0 if every outcome is approve."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--task", default=None)
     args = parser.parse_args()

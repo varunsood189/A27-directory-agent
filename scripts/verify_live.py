@@ -18,6 +18,7 @@ ROWS: list[str] = []
 
 
 def check(name: str, ok: bool, detail: str = "") -> None:
+    """Record one PASS/FAIL line for the live battery."""
     global PASS, FAIL
     if ok:
         PASS += 1
@@ -28,6 +29,7 @@ def check(name: str, ok: bool, detail: str = "") -> None:
 
 
 def connect(book: str) -> tuple[McpClient, DirectoryAgent]:
+    """Login one book with writes off. Returns client + agent."""
     client = McpClient(settings.book_base(book), settings.email(), settings.book_password(book), "team27-verify")
     agent = DirectoryAgent(client, apply_writes=False)
     agent.connect()
@@ -35,6 +37,7 @@ def connect(book: str) -> tuple[McpClient, DirectoryAgent]:
 
 
 def main() -> int:
+    """Run Keystone + Suryodaya smokes. Exit 1 if any check fails."""
     check("password keystone len 20", len(settings.book_password("keystone")) == 20, str(len(settings.book_password("keystone"))))
     check("password suryodaya len 20", len(settings.book_password("suryodaya")) == 20, str(len(settings.book_password("suryodaya"))))
     check("writes off", settings.apply_writes() is False)

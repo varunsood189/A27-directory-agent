@@ -11,14 +11,20 @@ PROTOCOL = "2025-11-25"
 
 
 class McpError(RuntimeError):
+    """Raised when login or an MCP JSON-RPC call fails."""
+
     def __init__(self, message: str, *, http_status: int | None = None, payload: Any = None):
+        """Store the HTTP status and parsed body next to the message."""
         super().__init__(message)
         self.http_status = http_status
         self.payload = payload
 
 
 class McpClient:
+    """Login to one book, handshake MCP, call tools, keep a journal of calls."""
+
     def __init__(self, base_url: str, email: str, password: str, client_name: str = "team27-directory"):
+        """Remember book URL and credentials. Token is set by login()."""
         self.base_url = base_url.rstrip("/")
         self.email = email
         self.password = password
@@ -28,6 +34,7 @@ class McpClient:
         self.calls: list[dict[str, Any]] = []
 
     def _http(self, method: str, path: str, body: dict | None = None) -> tuple[int, Any]:
+        """POST or GET JSON. Returns (status, parsed body) even on HTTP errors."""
         url = f"{self.base_url}{path}"
         data = None if body is None else json.dumps(body).encode()
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -48,6 +55,7 @@ class McpClient:
             return e.code, parsed
 
     def login(self) -> None:
+        """POST /api/auth/login and store the Bearer token."""
         status, payload = self._http(
             "POST",
             "/api/auth/login",
@@ -58,12 +66,14 @@ class McpClient:
         self.token = payload["token"]
 
     def me(self) -> dict[str, Any]:
+        """GET /api/auth/me (email, allowed_apps, roles)."""
         status, payload = self._http("GET", "/api/auth/me")
         if status != 200 or not isinstance(payload, dict):
             raise McpError(f"/api/auth/me HTTP {status}", http_status=status, payload=payload)
         return payload
 
     def handshake(self) -> dict[str, Any]:
+        """MCP initialize plus notifications/initialized. Required before tools/call."""
         init = self.rpc(
             "initialize",
             {
@@ -80,6 +90,7 @@ class McpClient:
         return init
 
     def rpc(self, method: str, params: dict[str, Any] | None = None) -> Any:
+        """POST /api/mcp JSON-RPC. Appends to self.calls. Raises McpError on envelope error."""
         self._rpc_id += 1
         body = {"jsonrpc": "2.0", "id": self._rpc_id, "method": method, "params": params or {}}
         status, payload = self._http("POST", "/api/mcp", body)
@@ -101,6 +112,7 @@ class McpClient:
         return payload.get("result")
 
     def call_tool(self, name: str, arguments: dict[str, Any] | None = None) -> Any:
+        """Call one MCP tool (e.g. Party.list) and unwrap structuredContent."""
         result = self.rpc("tools/call", {"name": name, "arguments": arguments or {}})
         if self.calls:
             self.calls[-1]["tool"] = name
@@ -108,6 +120,7 @@ class McpClient:
         return unwrap_tool_result(result)
 
     def list_all(self, tool: str, extra: dict[str, Any] | None = None, page_size: int = 100) -> list[dict[str, Any]]:
+        """Page a *.list tool until offset covers total. Returns all row dicts."""
         extra = dict(extra or {})
         offset = 0
         rows: list[dict[str, Any]] = []
@@ -127,6 +140,7 @@ class McpClient:
 
 
 def unwrap_tool_result(result: Any) -> Any:
+    """Turn an MCP tools/call result into a dict with data/id when possible."""
     if not isinstance(result, dict):
         return result
     structured = result.get("structuredContent")

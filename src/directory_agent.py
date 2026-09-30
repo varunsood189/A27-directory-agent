@@ -43,17 +43,20 @@ PARTY_LIST_BLOCKED = frozenset(
 
 
 def normalize_name(name: str | None) -> str:
+    """Lowercase a display name and strip a trailing (2)/(3) suffix for clustering."""
     text = unicodedata.normalize("NFKC", name or "")
     text = SUFFIX.sub("", text)
     return " ".join(text.lower().split())
 
 
 def is_refusal_request(request: str) -> bool:
+    """True if the user asked for payroll, invoices, or other out-of-seat apps."""
     lowered = request.lower()
     return any(m in lowered for m in REFUSE_MARKERS)
 
 
 def extract_company(request: str) -> str | None:
+    """Pull a company name from 'who do we know at …'. None if the phrase is generic."""
     patterns = [
         r"who do we know at\s+(.+?)\??$",
         r"at this company[:\s]+(.+?)\??$",
@@ -74,6 +77,7 @@ def extract_company(request: str) -> str | None:
 
 
 def party_list_args(extra: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Build Party.list arguments. Rejects filters that zero Keystone (contact_type, defaults)."""
     args = dict(extra or {})
     blocked = PARTY_LIST_BLOCKED.intersection(args)
     if blocked:
@@ -82,6 +86,7 @@ def party_list_args(extra: dict[str, Any] | None = None) -> dict[str, Any]:
 
 
 def find_org(client: McpClient, company: str) -> dict[str, Any] | None:
+    """Search Party.list for an organization matching the company string."""
     hits = client.call_tool("Party.list", party_list_args({"search": company, "limit": 50}))
     orgs = [p for p in (hits.get("data") or []) if isinstance(p, dict)]
     org = next((p for p in orgs if p.get("type") == "organization"), None)
@@ -93,6 +98,7 @@ def find_org(client: McpClient, company: str) -> dict[str, Any] | None:
 
 
 def relationship_rows(client: McpClient, org_id: str) -> list[dict[str, Any]]:
+    """List PartyRelationship rows where the org is from_ or to_. Does not send relationship=associate."""
     rows: list[dict[str, Any]] = []
     seen: set[str] = set()
     for filt in ({"to_party_id": org_id}, {"from_party_id": org_id}):
@@ -110,6 +116,7 @@ def relationship_rows(client: McpClient, org_id: str) -> list[dict[str, Any]]:
 
 
 def relationship_other_ids(client: McpClient, org_id: str) -> set[str]:
+    """Ids of the other party on each relationship edge for this org. Used by the harness."""
     ids: set[str] = set()
     for rel in relationship_rows(client, org_id):
         other_id = rel["from_party_id"] if rel.get("to_party_id") == org_id else rel.get("to_party_id")
@@ -119,17 +126,22 @@ def relationship_other_ids(client: McpClient, org_id: str) -> set[str]:
 
 
 class DirectoryAgent:
+    """Rule-based Directory seat: refuse, dedupe by name, who-we-know via relationships."""
+
     def __init__(self, client: McpClient, apply_writes: bool = False):
+        """apply_writes False (default) only identifies clusters; does not create relationships."""
         self.client = client
         self.apply_writes = apply_writes
 
     def connect(self) -> dict[str, Any]:
+        """Login, /me, MCP handshake. Returns the me payload."""
         self.client.login()
         me = self.client.me()
         self.client.handshake()
         return me
 
     def handle(self, request: str) -> dict[str, Any]:
+        """Route one user request: refuse, deduplicate, and/or who-we-know. Returns JSON-ready dict."""
         if is_refusal_request(request):
             return {
                 "refused": True,
@@ -168,6 +180,7 @@ class DirectoryAgent:
         return out
 
     def deduplicate(self) -> list[dict[str, Any]]:
+        """Page all parties and group by normalize_name. Clusters of 2+ only. Writes optional."""
         # Page all parties. Do not filter contact_type (Keystone total 0).
         # Do not send advertised Party.list defaults. APPLY_WRITES off: identify only.
         parties = self.client.list_all("Party.list", party_list_args({"sort_by": "name", "sort_order": "asc"}))
@@ -213,6 +226,7 @@ class DirectoryAgent:
         return clusters
 
     def _link_associates(self, ids: list[str]) -> list[dict[str, Any]]:
+        """If APPLY_WRITES: create associate edges between cluster members. Not a merge."""
         created = []
         primary = ids[0]
         for other in ids[1:]:
@@ -234,6 +248,7 @@ class DirectoryAgent:
         return created
 
     def who_at(self, company: str | None) -> tuple[list[dict[str, Any]], str | None]:
+        """People linked to the org. Empty list + note if the graph has no edges (do not invent)."""
         if not company:
             return [], "No company name in the request."
 

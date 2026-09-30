@@ -21,6 +21,7 @@ BOOKS = ("suryodaya", "keystone")
 
 
 def main() -> int:
+    """CLI: --book suryodaya|keystone, --request text. Prints me + agent JSON. Returns 0 on success."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--book", choices=BOOKS, default="suryodaya")
     parser.add_argument("--request", default=DEFAULT_REQUEST)
