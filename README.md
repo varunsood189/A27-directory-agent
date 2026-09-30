@@ -10,7 +10,7 @@ Goals: `directory.deduplicate_customers`, `directory.who_do_we_know`.
 
 - [Gap report vs Attio](docs/gap-report.md)
 - [Bugs](docs/bugs.md) — **10 filed**
-- [Domain map](docs/domain-map.md)
+- [Lab sheet (aim / apparatus / experiment)](docs/lab-sheet.md)
 
 ## Agent + harness
 
@@ -27,6 +27,6 @@ python3 harness/run.py
 |---|---|
 | `src/` | MCP client + Directory agent |
 | `harness/` | Five tasks, two books. Who-we-know scored by relationship id sets. Journals under `runs/` |
-| `docs/test-spec.md` | Cases **you** type as pytest. Generated tests score 0. |
+| `docs/test-spec.md` | Cases **you** type as pytest. Generated tests score 0. Live extra checks: `python3 scripts/verify_live.py` |
 
 Do not wrap `GET /api/agent/tools`. Do not `PUT /api/accounting/locale`. Do not re-file team20 Files/platform reports.
