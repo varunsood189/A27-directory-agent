@@ -14,7 +14,7 @@ Seat 27 predicates first. Do not generate 100 files.
 - [x] `test_spec_rest.py` — `(2)` pair get, Suryodaya rel 0, HTTP 200 envelope, re-get, Godrej ids, journal file, spaces search
 - [x] `test_bugs.py` — bugs 4, 6, 7, 8, 9
 - [x] `test_boundary.py` — limit 0 / -1, offset -1, refuse parametrize, truncated password
-- [ ] `test_2.py` — random words (optional)
+- [x] `test_2.py` — random words (optional)
 
 ## Do not add
 

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Directory Agent — Team 27</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #555;
+      --line: #d0d0d0;
+      --paper: #fafafa;
+      --card: #fff;
+      --mark: #1f4e79;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 16px/1.5 "Georgia", "Times New Roman", serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    header {
+      border-bottom: 3px solid var(--ink);
+      padding: 1.5rem 1.25rem 1rem;
+      max-width: 52rem;
+      margin: 0 auto;
+    }
+    header p { margin: 0.25rem 0 0; color: var(--muted); font-family: system-ui, sans-serif; font-size: 0.9rem; }
+    h1 { margin: 0; font-size: 1.75rem; font-weight: 700; }
+    nav {
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--line);
+    }
+    nav a { color: var(--mark); margin-right: 1rem; text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    main { max-width: 52rem; margin: 0 auto; padding: 1.25rem; }
+    section { margin-bottom: 2.25rem; }
+    h2 {
+      font-size: 1.2rem;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.35rem;
+      margin: 0 0 0.85rem;
+    }
+    blockquote {
+      margin: 0 0 1rem;
+      padding: 0.6rem 0.9rem;
+      border-left: 4px solid var(--mark);
+      background: var(--card);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+      font-family: system-ui, sans-serif;
+    }
+    .stats div {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 0.7rem 0.8rem;
+    }
+    .stats strong { display: block; font-size: 1.35rem; color: var(--mark); }
+    .stats span { font-size: 0.8rem; color: var(--muted); }
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+      align-items: stretch;
+      gap: 0.4rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.8rem;
+    }
+    .box {
+      background: var(--card);
+      border: 1px solid var(--ink);
+      padding: 0.7rem;
+    }
+    .box b { display: block; margin-bottom: 0.25rem; }
+    .arrow { align-self: center; color: var(--muted); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: system-ui, sans-serif;
+      font-size: 0.82rem;
+    }
+    th, td { border-bottom: 1px solid var(--line); text-align: left; padding: 0.4rem 0.35rem; vertical-align: top; }
+    th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
+    pre, code { font-family: ui-monospace, "Cascadia Code", monospace; font-size: 0.8rem; }
+    pre {
+      background: #111;
+      color: #eee;
+      padding: 0.9rem 1rem;
+      overflow-x: auto;
+    }
+    ul { padding-left: 1.2rem; }
+    footer {
+      max-width: 52rem;
+      margin: 0 auto 2rem;
+      padding: 0 1.25rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    @media (max-width: 720px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .arrow { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Directory Agent — Team 27</h1>
+    <p>Seat 27 · Group A27 · login team27@theschoolofai.in · not Files · not Ask Agent</p>
+  </header>
+  <nav>
+    <a href="#run">Run</a>
+    <a href="#arch">Architecture</a>
+    <a href="#tests">Tests (54)</a>
+    <a href="#bugs">Bugs (10)</a>
+  </nav>
+  <main>
+    <section>
+      <blockquote>Deduplicate the customer list, and tell me who we know at this company.</blockquote>
+      <p>Goals: <code>directory.deduplicate_customers</code>, <code>directory.who_do_we_know</code>. Python rules + MCP <code>POST /api/mcp</code>. No model API key. Writes off (<code>APPLY_WRITES=0</code>).</p>
+      <div class="stats">
+        <div><strong>54</strong><span>pytest (last run: all passed)</span></div>
+        <div><strong>5/5</strong><span>harness approve (30 Sep)</span></div>
+        <div><strong>10</strong><span>bugs filed in-app</span></div>
+        <div><strong>2</strong><span>books: Suryodaya, Keystone</span></div>
+      </div>
+    </section>
+
+    <section id="run">
+      <h2>How to run</h2>
+      <p>Passwords in <code>.env</code> (gitignored). Do not <code>source .env</code> — bash strips <code>!</code> and login 401s.</p>
+<pre>python3 src/run_agent.py --book keystone --request "Who do we know at Hocking Hills Mower Works?"
+python3 src/run_agent.py --book suryodaya --request "Deduplicate the customer list."
+python3 harness/run.py
+python3 -m pytest tests/ -q
+python3 scripts/verify_live.py</pre>
+      <p>Expect: Matt Swaim at Hocking Hills; <code>(2)</code> clusters on Suryodaya with <code>links: []</code>; payroll request refused; harness every line <code>approve</code>.</p>
+    </section>
+
+    <section id="arch">
+      <h2>Architecture</h2>
+      <div class="flow">
+        <div class="box"><b>You</b>request text</div>
+        <div class="arrow">→</div>
+        <div class="box"><b>DirectoryAgent</b>refuse / dedupe / who</div>
+        <div class="arrow">→</div>
+        <div class="box"><b>McpClient</b>JSON-RPC POST /api/mcp</div>
+        <div class="arrow">→</div>
+        <div class="box"><b>Books</b>Suryodaya (IN)<br>Keystone (US)</div>
+      </div>
+      <p>Harness scores <strong>live ids</strong>, not English. Who-list must equal <code>PartyRelationship</code> other-party ids. Dedupe clusters must still <code>Party.get</code>. Refuse must never call <code>SalarySlip</code>.</p>
+      <p>Workarounds: do not send Keystone <code>contact_type=customer</code> (total 0). Do not send <code>relationship=associate</code> (zeros the graph). Ask Agent is unassigned to this login — expected, not a bug.</p>
+    </section>
+
+    <section id="tests">
+      <h2>Tests — 54 pytest</h2>
+      <p>Spec cases 1–18 are covered. Staff zeros agent-generated pytest; type <code>tests/test_me.py</code> yourself for marks. Not pytest: harness (5) + <code>verify_live.py</code> (~29).</p>
+      <table>
+        <thead>
+          <tr><th>File</th><th>N</th><th>Covers</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>test_1.py</code></td><td>3</td><td>normalize (2), refuse vs who, blocked contact_type</td></tr>
+          <tr><td><code>test_names.py</code></td><td>1</td><td>Aarti Deshpande (2)</td></tr>
+          <tr><td><code>test_2.py</code></td><td>4</td><td>random suffix / refuse / extract</td></tr>
+          <tr><td><code>test_who_predicate.py</code></td><td>1</td><td>Hocking Hills ids == relationships, Matt Swaim</td></tr>
+          <tr><td><code>test_dedupe_predicate.py</code></td><td>2</td><td>clusters + Party.get; Ajay not one merge</td></tr>
+          <tr><td><code>test_seat_queue.py</code></td><td>4</td><td>refuse, Godrej, extra arg, associate=0</td></tr>
+          <tr><td><code>test_handle_more.py</code></td><td>4</td><td>trailing period, combined request, links [], missing get</td></tr>
+          <tr><td><code>test_positive_negative.py</code></td><td>13</td><td>happy path + refuse / unknown company / bad id</td></tr>
+          <tr><td><code>test_spec_rest.py</code></td><td>7</td><td>(2) pair, rel 0, HTTP 200, journal, spaces search</td></tr>
+          <tr><td><code>test_bugs.py</code></td><td>5</td><td>bugs 4, 6, 7, 8, 9</td></tr>
+          <tr><td><code>test_boundary.py</code></td><td>10</td><td>limit 0/−1, offset −1, refuse words, .env password</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="bugs">
+      <h2>Bugs filed — 10</h2>
+      <p>In-app Report a problem on Keystone (<code>class.agentswitch</code>). Do not re-file team20 #1–17.</p>
+      <table>
+        <thead>
+          <tr><th>#</th><th>What</th><th>Id</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Active (90d) = 0 vs banner 11 customers</td><td>not recovered</td></tr>
+          <tr><td>2</td><td>contact_type=customer total 0 on Keystone</td><td>94be1601-…</td></tr>
+          <tr><td>3</td><td>relationship=associate zeros the graph</td><td>a9a923b6-…</td></tr>
+          <tr><td>4</td><td>not_found uses JSON-RPC −32602</td><td>d8ec8e3e-…</td></tr>
+          <tr><td>5</td><td>non-uuid Party.get says not found</td><td>05f734c2-…</td></tr>
+          <tr><td>6</td><td>VIP/Investors members are organizations</td><td>5e2bf33f-…</td></tr>
+          <tr><td>7</td><td>9 of 12 Suryodaya groups empty</td><td>24977785-…</td></tr>
+          <tr><td>8</td><td>5 of 8 Suryodaya address books empty</td><td>61654fd2-…</td></tr>
+          <tr><td>9</td><td>first_name / last_name empty; sort returns orgs</td><td>b1bd54a6-…</td></tr>
+          <tr><td>10</td><td>search of only spaces total 0</td><td>33506af1-…</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <footer>
+    Repo: github.com/varunsood189/A27-directory-agent · Axiom due 6 Oct 2026 13:00 · this page is local HTML, not Ask Agent
+  </footer>
+</body>
+</html>

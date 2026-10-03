@@ -41,7 +41,7 @@ def get(key: str, default: str | None = None) -> str | None:
     file_val = file_vals.get(key)
     env_val = os.environ.get(key)
     if key in PASSWORD_KEYS:
-        # Bash history expansion turns juInHHtf6r3Et0g3!aA1 into 16 chars. Prefer the file.
+        # Bash history expansion strips `!` and shortens the shell password. Prefer the file.
         if file_val:
             if not env_val or len(env_val) < len(file_val):
                 return file_val
