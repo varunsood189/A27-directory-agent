@@ -20,10 +20,10 @@ Tick in order. Due **Tue 6 Oct 2026, 13:00**. Seat is **Directory**, not Files.
 
 - [x] **Keystone Harness button** — https://class.agentswitch.theschoolofai.in → Harness → same GitHub, branch `main`
 - [x] **Suryodaya branch** — Edit harness card, set Branch to `main` if it still shows `—`
-- [ ] **A27 group** — post: harness GitHub URL + 5/5 approve (they said they see no harness in chat)
+- [x] **A27 group** — post: harness GitHub URL + 5/5 approve (they said they see no harness in chat)
 - [x] **Type tests** — `tests/test_me.py` (normalize, refuse, blocked contact_type)
 - [x] **Password comment** — no password in `src/settings.py`
-- [ ] **Incognito check** — open the GitHub URL with no login; it must load
+- [x] **Incognito check** — open the GitHub URL with no login; it must load
 
 ## Do not do
 
