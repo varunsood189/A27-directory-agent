@@ -22,6 +22,7 @@ MCP only (`POST /api/mcp`). Both books. Writes off unless `APPLY_WRITES=1`.
 python3 src/run_agent.py --book keystone --request "Who do we know at Hocking Hills Mower Works?"
 python3 src/run_agent.py --book suryodaya
 python3 harness/run.py
+python -m harness.runner --out results.json
 ```
 
 | Path | What |
