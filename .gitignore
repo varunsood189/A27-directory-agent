@@ -8,3 +8,4 @@ docs/live/
 *.token
 .DS_Store
 results.json
+results-*.json

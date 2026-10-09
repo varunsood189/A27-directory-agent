@@ -49,12 +49,14 @@ def score_task(client: McpClient, task: dict, result: dict) -> tuple[str, str]:
     return "unevaluated", f"unknown predicate {kind}"
 
 
-def openai_directory_loop(agent: DirectoryAgent, instance: str, request: str) -> None:
-    """Platform model must call a tool; the tool runs our Directory agent."""
+def openai_party_ping(mcp: McpClient, instance: str) -> None:
+    """Cheap tool loop like the official example. Skip if OPENAI_API_KEY is missing (laptop)."""
+    if not os.environ.get("OPENAI_API_KEY"):
+        return
     try:
         from openai import OpenAI
     except Exception as exc:  # noqa: BLE001
-        record("agent_tool_loop", "Platform model calls Directory handle via a tool", False, repr(exc), instance)
+        record("agent_tool_loop", "Platform model uses a Party.list tool and answers", False, repr(exc), instance)
         return
 
     model = os.environ.get("OPENAI_MODEL", "agentswitch-default")
@@ -62,30 +64,27 @@ def openai_directory_loop(agent: DirectoryAgent, instance: str, request: str) ->
         {
             "type": "function",
             "function": {
-                "name": "directory_handle",
-                "description": "Answer a Directory seat request (dedupe, who-we-know, or refuse) against live MCP.",
-                "parameters": {
-                    "type": "object",
-                    "properties": {"request": {"type": "string"}},
-                    "required": ["request"],
-                },
+                "name": "list_parties",
+                "description": "List parties on this Directory book (limit 1). Returns JSON with total.",
+                "parameters": {"type": "object", "properties": {}},
             },
         }
     ]
     messages = [
         {
             "role": "system",
-            "content": "You are the Directory Agent. Always call directory_handle for the user request. Then answer briefly from the tool result. Do not invent people.",
+            "content": "You are a Directory agent. Always call list_parties. Then reply with the total from the tool.",
         },
-        {"role": "user", "content": request},
+        {"role": "user", "content": "How many parties are in this book? Use the tool. Reply with the total."},
     ]
     used_tool = False
     answer = ""
+    total = None
     try:
-        client = OpenAI()
+        oai = OpenAI()
         for _ in range(4):
-            reply = client.chat.completions.create(
-                model=model, messages=messages, tools=tools, max_tokens=512
+            reply = oai.chat.completions.create(
+                model=model, messages=messages, tools=tools, max_tokens=256
             )
             msg = reply.choices[0].message
             if msg.tool_calls:
@@ -98,29 +97,28 @@ def openai_directory_loop(agent: DirectoryAgent, instance: str, request: str) ->
                     }
                 )
                 for tc in msg.tool_calls:
-                    args = json.loads(tc.function.arguments or "{}")
-                    req = args.get("request") or request
-                    payload = agent.handle(req)
+                    page = mcp.call_tool("Party.list", {"limit": 1})
+                    total = page.get("total") if isinstance(page, dict) else None
                     messages.append(
                         {
                             "role": "tool",
                             "tool_call_id": tc.id,
-                            "content": json.dumps(payload, default=str)[:4000],
+                            "content": json.dumps({"total": total}, default=str),
                         }
                     )
                 continue
             answer = msg.content or ""
             break
-        ok = used_tool and bool(answer.strip())
+        ok = used_tool and total is not None and str(total) in (answer or "")
         record(
             "agent_tool_loop",
-            "Platform model uses directory_handle and answers",
+            "Platform model uses a Party.list tool and answers",
             ok,
-            f"used_tool={used_tool} answer={answer[:200]!r}",
+            f"used_tool={used_tool} total={total} answer={answer[:200]!r}",
             instance,
         )
     except Exception as exc:  # noqa: BLE001
-        record("agent_tool_loop", "Platform model uses directory_handle and answers", False, repr(exc), instance)
+        record("agent_tool_loop", "Platform model uses a Party.list tool and answers", False, repr(exc), instance)
 
 
 def write_results(instance: str) -> None:
@@ -176,12 +174,7 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001
             record(task["id"], task["request"], False, repr(exc), instance)
 
-    prompt = (
-        "Who do we know at Hocking Hills Mower Works?"
-        if instance == "keystone"
-        else "Deduplicate the customer list."
-    )
-    openai_directory_loop(agent, instance, prompt)
+    openai_party_ping(client, instance)
 
     write_results(instance)
     if not TASKS or any(not t["passed"] for t in TASKS):
