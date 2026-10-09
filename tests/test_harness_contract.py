@@ -36,17 +36,32 @@ def test_record_shape_matches_official_results():
 
 def test_write_results_json_schema(tmp_path, monkeypatch):
     TASKS.clear()
-    record("t1", "What it checks", True, "short proof", "suryodaya")
+    record("deduplicate_customers", "Deduplicate the customer list.", True, "approve: 11 clusters", "suryodaya")
     monkeypatch.chdir(tmp_path)
     write_results("suryodaya")
     import json
 
-    body = json.loads((tmp_path / "results.json").read_text())
+    raw = (tmp_path / "results.json").read_text()
+    body = json.loads(raw)
     assert "tasks" in body
     assert "summary" in body
-    assert body["tasks"][0]["passed"] is True
-    assert 0 <= body["tasks"][0]["score"] <= 1
+    row = body["tasks"][0]
+    assert "outcome" not in row
+    assert row["passed"] is True
+    assert isinstance(row["passed"], bool)
+    assert '"passed": true' in raw
+    assert 0 <= row["score"] <= 1
     assert 1 <= len(body["tasks"]) <= 200
+
+
+def test_official_task_never_emits_outcome_string():
+    from harness.runner import official_task
+
+    row = official_task(
+        {"id": "find_and_who_keystone", "title": "who", "outcome": "approve", "detail": "ids match"}
+    )
+    assert row["passed"] is True
+    assert "outcome" not in row
 
 
 def test_runner_does_not_read_dotenv_passwords():

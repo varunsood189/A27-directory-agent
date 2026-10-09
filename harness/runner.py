@@ -121,10 +121,44 @@ def openai_party_ping(mcp: McpClient, instance: str) -> None:
         record("agent_tool_loop", "Platform model uses a Party.list tool and answers", False, repr(exc), instance)
 
 
+def official_task(row: dict) -> dict:
+    """Platform requires passed as JSON true/false — never outcome/approve."""
+    raw = row.get("passed") if "passed" in row else row.get("outcome")
+    if isinstance(raw, bool):
+        passed = raw
+    else:
+        passed = raw is True or str(raw).lower() in {"true", "approve", "1", "yes"}
+    try:
+        score = float(row.get("score", 1.0 if passed else 0.0))
+    except (TypeError, ValueError):
+        score = 1.0 if passed else 0.0
+    score = max(0.0, min(1.0, score))
+    return {
+        "id": str(row.get("id") or "unknown"),
+        "title": str(row.get("title") or row.get("id") or "task"),
+        "passed": bool(passed),
+        "score": score,
+        "evidence": str(row.get("evidence") or row.get("detail") or row.get("outcome") or "")[:500],
+    }
+
+
 def write_results(instance: str) -> None:
+    tasks = [official_task(row) for row in TASKS]
+    if not tasks:
+        tasks = [
+            official_task(
+                {
+                    "id": f"{instance}:empty",
+                    "title": "harness produced no tasks",
+                    "passed": False,
+                    "score": 0.0,
+                    "evidence": "no tasks recorded",
+                }
+            )
+        ]
     body = {
-        "tasks": TASKS,
-        "summary": f"{instance}: {sum(1 for t in TASKS if t['passed'])}/{len(TASKS)} checks passed",
+        "tasks": tasks,
+        "summary": f"{instance}: {sum(1 for t in tasks if t['passed'])}/{len(tasks)} checks passed",
     }
     Path("results.json").write_text(json.dumps(body, indent=2), encoding="utf-8")
 
