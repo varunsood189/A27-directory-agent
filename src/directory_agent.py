@@ -134,8 +134,9 @@ class DirectoryAgent:
         self.apply_writes = apply_writes
 
     def connect(self) -> dict[str, Any]:
-        """Login, /me, MCP handshake. Returns the me payload."""
-        self.client.login()
+        """Login if no token yet, then /me and MCP handshake. Returns the me payload."""
+        if not self.client.token:
+            self.client.login()
         me = self.client.me()
         self.client.handshake()
         return me

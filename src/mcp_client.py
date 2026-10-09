@@ -23,13 +23,20 @@ class McpError(RuntimeError):
 class McpClient:
     """Login to one book, handshake MCP, call tools, keep a journal of calls."""
 
-    def __init__(self, base_url: str, email: str, password: str, client_name: str = "team27-directory"):
-        """Remember book URL and credentials. Token is set by login()."""
+    def __init__(
+        self,
+        base_url: str,
+        email: str = "",
+        password: str = "",
+        client_name: str = "team27-directory",
+        token: str | None = None,
+    ):
+        """Remember book URL and credentials. Token is set by login() or passed in (platform harness)."""
         self.base_url = base_url.rstrip("/")
         self.email = email
         self.password = password
         self.client_name = client_name
-        self.token: str | None = None
+        self.token: str | None = token
         self._rpc_id = 0
         self.calls: list[dict[str, Any]] = []
 
