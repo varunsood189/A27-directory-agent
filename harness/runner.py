@@ -132,6 +132,7 @@ def write_results(instance: str) -> None:
 
 
 def main() -> int:
+    TASKS.clear()
     base = os.environ.get("AGENTSWITCH_BASE_URL", "").rstrip("/")
     token = os.environ.get("AGENTSWITCH_TOKEN", "")
     instance = (os.environ.get("AGENTSWITCH_INSTANCE") or "unknown").strip().lower()
