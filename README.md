@@ -38,4 +38,6 @@ python3 -m pytest tests/ -q
 python3 scripts/verify_live.py
 ```
 
+Local how-to: [docs/local-test.md](docs/local-test.md). These do **not** use your 3-day official run.
+
 Do not wrap `GET /api/agent/tools`. Do not `PUT /api/accounting/locale`. Do not re-file team20 Files/platform reports. Ask Agent is not assigned to team27 — run this repo instead.
